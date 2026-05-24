@@ -34,4 +34,10 @@ public class User
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
     }
+    
+    public void SetPasswordHash(string passwordHash)
+    {
+        PasswordHash = passwordHash;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
