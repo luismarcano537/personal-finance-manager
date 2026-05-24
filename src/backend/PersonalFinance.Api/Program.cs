@@ -1,9 +1,12 @@
+using PersonalFinance.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -27,5 +30,23 @@ app.MapGet("/health", () => Results.Ok(new
     }))
     .WithName("HealthCheck")
     .WithTags("Health");
+
+app.MapGet("/health/database", async (PersonalFinance.Infrastructure.Persistence.AppDbContext dbContext) =>
+    {
+        var canConnect = await dbContext.Database.CanConnectAsync();
+
+        return canConnect
+            ? Results.Ok(new
+            {
+                status = "Healthy",
+                database = "PostgreSQL",
+                canConnect = true,
+                timestamp = DateTime.UtcNow
+            })
+            : Results.Problem("Database connection failed");
+    })
+    .WithName("DatabaseHealthCheck")
+    .WithTags("Health");
+
 
 app.Run();
