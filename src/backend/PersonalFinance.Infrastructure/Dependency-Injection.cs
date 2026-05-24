@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PersonalFinance.Infrastructure.Persistence;
+using PersonalFinance.Application.Auth.Interfaces;
+using PersonalFinance.Infrastructure.Auth;
 
 namespace PersonalFinance.Infrastructure;
 
@@ -16,6 +18,8 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
 
+        services.AddScoped<IAuthService, AuthService>();
+        
         return services;
     }
 }
