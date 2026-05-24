@@ -64,3 +64,29 @@ The application will allow users to manage income, expenses, categories and mont
 - Implement authentication and authorization
 - Document technical decisions
 - Deploy a real application
+
+## Running PostgreSQL with Docker
+
+To start the local PostgreSQL database:
+
+```bash
+docker compose up -d
+```
+Database connection:
+```Host: localhost
+Port: 5433
+Database: personal_finance_db
+User: personal_finance_user
+Password: personal_finance_password
+```
+To stop the database:
+```
+docker compose down
+```
+
+To stop and remove the database volume (Warning!):
+```
+docker compose down -v
+```
+
+

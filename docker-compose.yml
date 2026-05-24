@@ -1,0 +1,16 @@
+services:
+  personal-finance-db:
+    image: postgres:16
+    container_name: personal-finance-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: personal_finance_db
+      POSTGRES_USER: personal_finance_user
+      POSTGRES_PASSWORD: personal_finance_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - personal_finance_pgdata:/var/lib/postgresql/data
+
+volumes:
+  personal_finance_pgdata:
