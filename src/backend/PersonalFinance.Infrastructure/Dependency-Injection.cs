@@ -19,7 +19,8 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString));
 
         services.AddScoped<IAuthService, AuthService>();
-        
+        services.AddScoped<ITokenService, TokenService>();
+
         return services;
     }
 }
