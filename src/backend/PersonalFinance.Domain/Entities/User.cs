@@ -1,7 +1,12 @@
+using PersonalFinance.Domain.Entities;
+using PersonalFinance.Domain.Enums;
+
 namespace PersonalFinance.Domain.Entities;
 
 public class User
 {
+    private readonly List<Category> _categories = new();
+    
     public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
@@ -9,6 +14,8 @@ public class User
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public bool IsActive { get; private set; }
+
+    public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
     
     private User(){}
 
