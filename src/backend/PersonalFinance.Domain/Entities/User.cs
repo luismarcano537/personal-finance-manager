@@ -1,3 +1,4 @@
+using System.Transactions;
 using PersonalFinance.Domain.Entities;
 using PersonalFinance.Domain.Enums;
 
@@ -6,6 +7,7 @@ namespace PersonalFinance.Domain.Entities;
 public class User
 {
     private readonly List<Category> _categories = new();
+    private readonly List<Transaction> _transactions = new();
     
     public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
@@ -16,6 +18,7 @@ public class User
     public bool IsActive { get; private set; }
 
     public IReadOnlyCollection<Category> Categories => _categories.AsReadOnly();
+    public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
     
     private User(){}
 
