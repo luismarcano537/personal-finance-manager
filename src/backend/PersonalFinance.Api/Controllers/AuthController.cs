@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PersonalFinance.Application.Auth.Interfaces;
@@ -61,15 +62,7 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> Me()
     {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (!Guid.TryParse(userIdClaim, out var userId))
-        {
-            return Unauthorized(new
-            {
-                message = "Invalid token."
-            });
-        }
+        var userId = GetAuthenticatedUserId();
 
         try
         {
@@ -84,5 +77,25 @@ public class AuthController : ControllerBase
                 message = ex.Message
             });
         }
+    }
+
+    private Guid GetAuthenticatedUserId()
+    {
+        var userIdClaims = new[]
+        {
+            User.FindFirstValue(ClaimTypes.NameIdentifier),
+            User.FindFirstValue(JwtRegisteredClaimNames.Sub),
+            User.FindFirstValue("sub")
+        };
+
+        foreach (var userIdClaim in userIdClaims)
+        {
+            if (Guid.TryParse(userIdClaim, out var userId))
+            {
+                return userId;
+            }
+        }
+
+        throw new UnauthorizedAccessException("Invalid token.");
     }
 }
