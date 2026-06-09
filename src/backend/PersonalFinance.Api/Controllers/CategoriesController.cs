@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PersonalFinance.Application.Categories.Interfaces;
@@ -121,13 +122,21 @@ public class CategoriesController : ControllerBase
 
     private Guid GetAuthenticatedUserId()
     {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (!Guid.TryParse(userIdClaim, out var userId))
+        var userIdClaims = new[]
         {
-            throw new UnauthorizedAccessException("Invalid token.");
+            User.FindFirstValue(ClaimTypes.NameIdentifier),
+            User.FindFirstValue(JwtRegisteredClaimNames.Sub),
+            User.FindFirstValue("sub")
+        };
+
+        foreach (var userIdClaim in userIdClaims)
+        {
+            if (Guid.TryParse(userIdClaim, out var userId))
+            {
+                return userId;
+            }
         }
 
-        return userId;
+        throw new UnauthorizedAccessException("Invalid token.");
     }
 }
