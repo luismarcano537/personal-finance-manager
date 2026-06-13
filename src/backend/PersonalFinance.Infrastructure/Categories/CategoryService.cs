@@ -119,7 +119,7 @@ public class CategoryService : ICategoryService
 
         if (category is null)
         {
-            throw new InvalidOperationException("The category does not exist.");
+            throw new KeyNotFoundException("The category does not exist.");
         }
 
         return category;
