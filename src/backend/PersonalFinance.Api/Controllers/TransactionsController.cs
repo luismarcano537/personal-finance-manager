@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PersonalFinance.Api.Responses;
 using PersonalFinance.Application.Transactions.Interfaces;
 using PersonalFinance.Application.Transactions.Requests;
+using PersonalFinance.Application.Transactions.Responses;
 using PersonalFinance.Domain.Enums;
 
 namespace PersonalFinance.Api.Controllers;
@@ -20,6 +22,12 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(TransactionResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create(CreateTransactionRequest request)
     {
         var userId = GetAuthenticatedUserId();
@@ -33,6 +41,13 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(
+        typeof(IReadOnlyList<TransactionResponse>),
+        StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? month,
         [FromQuery] int? year,
@@ -52,6 +67,10 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(TransactionResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var userId = GetAuthenticatedUserId();
@@ -62,6 +81,12 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(TransactionResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(Guid id, UpdateTransactionRequest request)
     {
         var userId = GetAuthenticatedUserId();
@@ -72,6 +97,10 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var userId = GetAuthenticatedUserId();

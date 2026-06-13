@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using PersonalFinance.Application.Auth.Interfaces;
 using PersonalFinance.Application.Auth.Request;
 using PersonalFinance.Application.Auth.Requests;
+using PersonalFinance.Application.Auth.Response;
+using PersonalFinance.Api.Responses;
 
 namespace PersonalFinance.Api.Controllers;
 
@@ -20,6 +22,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
         var user = await _authService.RegisterAsync(request);
@@ -31,6 +36,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var authResponse = await _authService.LoginAsync(request);
@@ -40,6 +48,9 @@ public class AuthController : ControllerBase
 
     [Authorize]
     [HttpGet("me")]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Me()
     {
         var userId = GetAuthenticatedUserId();

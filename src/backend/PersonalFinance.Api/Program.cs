@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using PersonalFinance.Api.Middleware;
+using PersonalFinance.Api.Middlewares;
 using PersonalFinance.Infrastructure;
 using PersonalFinance.Infrastructure.Persistence;
 

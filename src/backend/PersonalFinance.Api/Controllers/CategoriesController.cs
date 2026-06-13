@@ -2,8 +2,10 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PersonalFinance.Api.Responses;
 using PersonalFinance.Application.Categories.Interfaces;
 using PersonalFinance.Application.Categories.Requests;
+using PersonalFinance.Application.Categories.Responses;
 using PersonalFinance.Domain.Enums;
 
 namespace PersonalFinance.Api.Controllers;
@@ -21,6 +23,11 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(CategoryResponses), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create(CreateCategoryRequest request)
     {
         var userId = GetAuthenticatedUserId();
@@ -34,6 +41,11 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(
+        typeof(IReadOnlyList<CategoryResponses>),
+        StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll([FromQuery] CategoryType? type)
     {
         var userId = GetAuthenticatedUserId();
@@ -44,6 +56,10 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(CategoryResponses), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var userId = GetAuthenticatedUserId();
@@ -54,6 +70,12 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(CategoryResponses), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(Guid id, UpdateCategoryRequest request)
     {
         var userId = GetAuthenticatedUserId();
@@ -64,6 +86,10 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var userId = GetAuthenticatedUserId();
