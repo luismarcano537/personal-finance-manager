@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using PersonalFinance.Api.Middleware;
 using PersonalFinance.Infrastructure;
 using PersonalFinance.Infrastructure.Persistence;
 
@@ -44,6 +45,8 @@ builder.Services
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

@@ -22,40 +22,20 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        try
-        {
-            var user = await _authService.RegisterAsync(request);
+        var user = await _authService.RegisterAsync(request);
 
-            return CreatedAtAction(
-                nameof(Register),
-                new { id = user.Id },
-                user);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new
-            {
-                message = ex.Message
-            });
-        }
+        return CreatedAtAction(
+            nameof(Register),
+            new { id = user.Id },
+            user);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        try
-        {
-            var authResponse = await _authService.LoginAsync(request);
+        var authResponse = await _authService.LoginAsync(request);
 
-            return Ok(authResponse);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(new
-            {
-                message = ex.Message
-            });
-        }
+        return Ok(authResponse);
     }
 
     [Authorize]
@@ -64,19 +44,9 @@ public class AuthController : ControllerBase
     {
         var userId = GetAuthenticatedUserId();
 
-        try
-        {
-            var user = await _authService.GetCurrentUserAsync(userId);
+        var user = await _authService.GetCurrentUserAsync(userId);
 
-            return Ok(user);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(new
-            {
-                message = ex.Message
-            });
-        }
+        return Ok(user);
     }
 
     private Guid GetAuthenticatedUserId()

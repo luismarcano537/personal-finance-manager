@@ -25,22 +25,12 @@ public class CategoriesController : ControllerBase
     {
         var userId = GetAuthenticatedUserId();
 
-        try
-        {
-            var category = await _categoryService.CreateAsync(userId, request);
+        var category = await _categoryService.CreateAsync(userId, request);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = category.Id },
-                category);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new
-            {
-                message = ex.Message
-            });
-        }
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = category.Id },
+            category);
     }
 
     [HttpGet]
@@ -58,19 +48,9 @@ public class CategoriesController : ControllerBase
     {
         var userId = GetAuthenticatedUserId();
 
-        try
-        {
-            var category = await _categoryService.GetByIdAsync(userId, id);
+        var category = await _categoryService.GetByIdAsync(userId, id);
 
-            return Ok(category);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new
-            {
-                message = ex.Message
-            });
-        }
+        return Ok(category);
     }
 
     [HttpPut("{id:guid}")]
@@ -78,26 +58,9 @@ public class CategoriesController : ControllerBase
     {
         var userId = GetAuthenticatedUserId();
 
-        try
-        {
-            var category = await _categoryService.UpdateAsync(userId, id, request);
+        var category = await _categoryService.UpdateAsync(userId, id, request);
 
-            return Ok(category);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new
-            {
-                message = ex.Message
-            });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new
-            {
-                message = ex.Message
-            });
-        }
+        return Ok(category);
     }
 
     [HttpDelete("{id:guid}")]
@@ -105,19 +68,9 @@ public class CategoriesController : ControllerBase
     {
         var userId = GetAuthenticatedUserId();
 
-        try
-        {
-            await _categoryService.DeleteAsync(userId, id);
+        await _categoryService.DeleteAsync(userId, id);
 
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new
-            {
-                message = ex.Message
-            });
-        }
+        return NoContent();
     }
 
     private Guid GetAuthenticatedUserId()
