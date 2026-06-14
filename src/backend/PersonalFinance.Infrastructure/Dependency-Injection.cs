@@ -4,9 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using PersonalFinance.Infrastructure.Persistence;
 using PersonalFinance.Application.Auth.Interfaces;
 using PersonalFinance.Application.Categories.Interfaces;
+using PersonalFinance.Application.Summary.Interfaces;
 using PersonalFinance.Application.Transactions.Interfaces;
 using PersonalFinance.Infrastructure.Auth;
 using PersonalFinance.Infrastructure.Categories;
+using PersonalFinance.Infrastructure.Summary;
 using PersonalFinance.Infrastructure.Transactions;
 
 namespace PersonalFinance.Infrastructure;
@@ -26,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ITransactionService, TransactionService>();
+        services.AddScoped<ISummaryService, SummaryService>();
 
         return services;
     }
