@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: personal-finance-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: personal_finance
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - personal_finance_pgdata:/var/lib/postgresql/data
+    mem_limit: 512m
+    cpus: 0.5
+
+volumes:
+  personal_finance_pgdata:
