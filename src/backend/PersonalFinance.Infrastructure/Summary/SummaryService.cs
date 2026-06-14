@@ -34,7 +34,14 @@ public class SummaryService : ISummaryService
                 nameof(year));
         }
 
-        var startDate = new DateTime(year, month, 1);
+        var startDate = new DateTime(
+            year,
+            month,
+            1,
+            0,
+            0,
+            0,
+            DateTimeKind.Utc);
         var endDate = startDate.AddMonths(1);
 
         var summary = await _dbContext.Transactions
