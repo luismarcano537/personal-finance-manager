@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PersonalFinance.Api.Responses;
 using PersonalFinance.Application.Summary.Interfaces;
 using PersonalFinance.Application.Summary.Responses;
+using PersonalFinance.Domain.Enums;
 
 namespace PersonalFinance.Api.Controllers;
 
@@ -32,6 +33,27 @@ public class SummaryController : ControllerBase
         var userId = GetAuthenticatedUserId();
 
         var summary = await _summaryService.GetMonthlySummaryAsync(userId, month, year);
+
+        return Ok(summary);
+    }
+
+    [HttpGet("categories")]
+    [ProducesResponseType(typeof(CategorySummaryResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetCategories(
+        [FromQuery] int month,
+        [FromQuery] int year,
+        [FromQuery] CategoryType? type)
+    {
+        var userId = GetAuthenticatedUserId();
+
+        var summary = await _summaryService.GetCategorySummaryAsync(
+            userId,
+            month,
+            year,
+            type);
 
         return Ok(summary);
     }
