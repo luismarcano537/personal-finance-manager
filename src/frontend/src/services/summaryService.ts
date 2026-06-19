@@ -2,5 +2,5 @@ import { apiClient } from '../api/apiClient'
 import type { Summary } from '../types/summary'
 
 export function getSummary() {
-  return apiClient<Summary>('/summary')
+  return apiClient.get<Summary>('/summary').then((response) => response.data)
 }
