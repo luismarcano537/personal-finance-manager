@@ -1,20 +1,34 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+import axios from 'axios'
 
-export async function apiClient<TResponse>(
-  path: string,
-  options?: RequestInit,
-): Promise<TResponse> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-    ...options,
-  })
+const AUTH_TOKEN_STORAGE_KEY = 'authToken'
 
-  if (!response.ok) {
-    throw new Error('Request failed')
+export const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
   }
 
-  return response.json() as Promise<TResponse>
-}
+  return config
+})
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+      window.dispatchEvent(new Event('unauthorized'))
+    }
+
+    return Promise.reject(error)
+  },
+)
+
+export { AUTH_TOKEN_STORAGE_KEY }
