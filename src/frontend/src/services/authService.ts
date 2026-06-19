@@ -1,8 +1,17 @@
 import { apiClient } from '../api/apiClient'
-import type { LoginRequest, LoginResponse } from '../types/auth'
+import type { AuthResponse, AuthUser, LoginRequest } from '../types/auth'
 
-export function login(credentials: LoginRequest) {
+export function login(credentials: LoginRequest): Promise<AuthResponse> {
   return apiClient
-    .post<LoginResponse>('/auth/login', credentials)
+    .post<AuthResponse>('/api/auth/login', credentials)
     .then((response) => response.data)
+}
+
+export function getCurrentUser(): Promise<AuthUser> {
+  return apiClient.get<AuthUser>('/api/auth/me').then((response) => response.data)
+}
+
+export const authService = {
+  login,
+  getCurrentUser,
 }
