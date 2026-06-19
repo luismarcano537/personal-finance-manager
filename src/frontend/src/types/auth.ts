@@ -1,8 +1,17 @@
+export type AuthUser = {
+  id: string
+  name: string
+  email: string
+}
+
 export type LoginRequest = {
   email: string
   password: string
 }
 
-export type LoginResponse = {
+export type AuthResponse = {
   token: string
+  user: AuthUser
 }
+
+export type LoginResponse = AuthResponse
