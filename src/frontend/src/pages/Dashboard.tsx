@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
+import CategorySummaryList from '../components/summary/CategorySummaryList'
 import SummaryCard from '../components/summary/SummaryCard'
 import { summaryService } from '../services/summaryService'
-import type { MonthlySummary } from '../types/summary'
+import type {
+  CategorySummaryParams,
+  CategorySummary,
+  MonthlySummary,
+  TransactionType,
+} from '../types/summary'
 
 const formatCurrency = (value: number): string =>
   new Intl.NumberFormat('en-US', {
@@ -13,6 +19,13 @@ function Dashboard() {
   const [summary, setSummary] = useState<MonthlySummary | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string>('')
+  const [categorySummary, setCategorySummary] =
+    useState<CategorySummary | null>(null)
+  const [categoryLoading, setCategoryLoading] = useState<boolean>(true)
+  const [categoryError, setCategoryError] = useState<string>('')
+  const [selectedCategoryType, setSelectedCategoryType] = useState<
+    TransactionType | undefined
+  >(undefined)
 
   useEffect(() => {
     const currentDate = new Date()
@@ -38,6 +51,41 @@ function Dashboard() {
 
     void loadMonthlySummary()
   }, [])
+
+  useEffect(() => {
+    const currentDate = new Date()
+    const month = currentDate.getMonth() + 1
+    const year = currentDate.getFullYear()
+
+    async function loadCategorySummary(): Promise<void> {
+      setCategoryLoading(true)
+      setCategoryError('')
+
+      try {
+        const categoryParams: CategorySummaryParams = {
+          month,
+          year,
+        }
+
+        if (selectedCategoryType !== undefined) {
+          categoryParams.type = selectedCategoryType
+        }
+
+        const categories = await summaryService.getCategorySummary(
+          categoryParams,
+        )
+        setCategorySummary(categories)
+      } catch {
+        setCategoryError(
+          'Could not load the category summary. Please try again later.',
+        )
+      } finally {
+        setCategoryLoading(false)
+      }
+    }
+
+    void loadCategorySummary()
+  }, [selectedCategoryType])
 
   return (
     <section className="max-w-6xl">
@@ -86,6 +134,14 @@ function Dashboard() {
           />
         </div>
       ) : null}
+
+      <CategorySummaryList
+        categories={categorySummary?.categories ?? []}
+        error={categoryError}
+        isLoading={categoryLoading}
+        onTypeChange={setSelectedCategoryType}
+        selectedType={selectedCategoryType}
+      />
     </section>
   )
 }
