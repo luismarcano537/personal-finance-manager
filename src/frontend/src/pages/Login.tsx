@@ -8,20 +8,26 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
-    setIsSubmitting(true)
+
+    if (!email.trim() || !password) {
+      setError('Email and password are required.')
+      return
+    }
+
+    setLoading(true)
 
     try {
       await login({ email, password })
       navigate('/dashboard', { replace: true })
     } catch {
-      setError('Email ou senha invalidos.')
+      setError('Invalid email or password.')
     } finally {
-      setIsSubmitting(false)
+      setLoading(false)
     }
   }
 
@@ -78,10 +84,10 @@ function Login() {
 
           <button
             className="w-full rounded-lg bg-emerald-400 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={isSubmitting}
+            disabled={loading}
             type="submit"
           >
-            {isSubmitting ? 'Entrando...' : 'Entrar'}
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
       </section>
