@@ -10,7 +10,8 @@ export type LoginRequest = {
 }
 
 export type AuthResponse = {
-  token: string
+  accessToken: string
+  expiresAt: string
   user: AuthUser
 }
 
