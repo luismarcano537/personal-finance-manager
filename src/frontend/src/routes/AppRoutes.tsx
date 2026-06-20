@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import AuthenticatedLayout from '../layouts/AuthenticatedLayout'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
 import NotFound from '../pages/NotFound'
@@ -37,7 +38,9 @@ function AppRoutes() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AuthenticatedLayout>
+                <Dashboard />
+              </AuthenticatedLayout>
             </ProtectedRoute>
           }
         />

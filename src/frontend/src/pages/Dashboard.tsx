@@ -1,26 +1,14 @@
-import { useAuth } from '../hooks/useAuth'
-
 function Dashboard() {
-  const { logout, user } = useAuth()
-
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-12">
-      <section className="w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center shadow-2xl sm:p-12">
-        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-          Dashboard
-        </h1>
-        <p className="mt-4 text-base text-emerald-400 sm:text-lg">
-          Bem-vindo{user ? `, ${user.name}` : ''}.
+    <section className="max-w-4xl">
+      <div className="rounded-lg border border-slate-800 bg-slate-900 p-6 shadow-xl sm:p-8">
+        <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
+          Your authenticated workspace is ready. Financial summaries and charts
+          will appear here in upcoming cards.
         </p>
-        <button
-          className="mt-8 rounded-lg border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-emerald-400 hover:text-emerald-300"
-          onClick={logout}
-          type="button"
-        >
-          Sair
-        </button>
-      </section>
-    </main>
+      </div>
+    </section>
   )
 }
 
