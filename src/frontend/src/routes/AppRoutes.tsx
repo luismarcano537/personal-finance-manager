@@ -4,27 +4,10 @@ import { useAuth } from '../hooks/useAuth'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
 import NotFound from '../pages/NotFound'
+import ProtectedRoute from './ProtectedRoute'
 
 type AuthRouteProps = {
   children: ReactNode
-}
-
-function ProtectedRoute({ children }: AuthRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth()
-
-  if (isLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-12">
-        <p className="text-sm font-medium text-slate-300">Carregando...</p>
-      </main>
-    )
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
-  }
-
-  return children
 }
 
 function PublicRoute({ children }: AuthRouteProps) {
