@@ -108,7 +108,7 @@ function Login() {
                 className="block text-sm font-semibold text-[#374151]"
                 htmlFor="password"
               >
-                Senha
+                Password
               </label>
               <input
                 autoComplete="current-password"
