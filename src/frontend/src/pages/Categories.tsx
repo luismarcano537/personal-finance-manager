@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import DeleteCategoryConfirmModal from '../components/categories/DeleteCategoryConfirmModal'
 import CategoryFormModal from '../components/categories/CategoryFormModal'
 import { categoryService } from '../services/categoryService'
 import { CategoryType, type Category } from '../types/category'
@@ -31,6 +32,9 @@ function Categories() {
   const [error, setError] = useState<string>('')
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  )
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null,
   )
 
@@ -89,12 +93,27 @@ function Categories() {
     setIsModalOpen(true)
   }
 
+  const handleOpenDeleteModal = (category: Category): void => {
+    setCategoryToDelete(category)
+  }
+
   const handleCloseModal = (): void => {
     setIsModalOpen(false)
     setSelectedCategory(null)
   }
 
+  const handleCloseDeleteModal = (): void => {
+    setCategoryToDelete(null)
+  }
+
   const handleModalSuccess = (): void => {
+    setIsLoading(true)
+    setError('')
+    void loadCategories()
+  }
+
+  const handleDeleteSuccess = (): void => {
+    setCategoryToDelete(null)
     setIsLoading(true)
     setError('')
     void loadCategories()
@@ -212,6 +231,13 @@ function Categories() {
                           >
                             Edit
                           </button>
+                          <button
+                            className="rounded-2xl border border-[#DC2626]/25 bg-white px-4 py-2 text-sm font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2]"
+                            onClick={() => handleOpenDeleteModal(category)}
+                            type="button"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </li>
                     )
@@ -229,6 +255,14 @@ function Categories() {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onSuccess={handleModalSuccess}
+        />
+      ) : null}
+
+      {categoryToDelete !== null ? (
+        <DeleteCategoryConfirmModal
+          category={categoryToDelete}
+          onClose={handleCloseDeleteModal}
+          onSuccess={handleDeleteSuccess}
         />
       ) : null}
     </>
