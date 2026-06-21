@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AuthenticatedLayout from '../layouts/AuthenticatedLayout'
+import Categories from '../pages/Categories'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
 import NotFound from '../pages/NotFound'
@@ -40,6 +41,16 @@ function AppRoutes() {
             <ProtectedRoute>
               <AuthenticatedLayout>
                 <Dashboard />
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Categories />
               </AuthenticatedLayout>
             </ProtectedRoute>
           }
