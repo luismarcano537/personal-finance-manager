@@ -37,7 +37,7 @@ public class CategoryService : ICategoryService
     {
         var query = _dbContext.Categories
             .AsNoTracking()
-            .Where(category => category.UserId == userId && category.Type == type);
+            .Where(category => category.UserId == userId && category.IsActive);
 
         if (type.HasValue)
         {
