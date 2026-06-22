@@ -6,6 +6,7 @@ import Categories from '../pages/Categories'
 import Dashboard from '../pages/Dashboard'
 import Login from '../pages/Login'
 import NotFound from '../pages/NotFound'
+import Transactions from '../pages/Transactions'
 import ProtectedRoute from './ProtectedRoute'
 
 type AuthRouteProps = {
@@ -51,6 +52,16 @@ function AppRoutes() {
             <ProtectedRoute>
               <AuthenticatedLayout>
                 <Categories />
+              </AuthenticatedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute>
+              <AuthenticatedLayout>
+                <Transactions />
               </AuthenticatedLayout>
             </ProtectedRoute>
           }

@@ -55,6 +55,19 @@ function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
               >
                 Categories
               </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  [
+                    'inline-flex rounded-2xl px-4 py-2 text-sm font-semibold transition',
+                    isActive
+                      ? 'bg-[#EAF7F0] text-[#2F855A]'
+                      : 'text-[#6B7280] hover:bg-[#F1F5F2] hover:text-[#1F2933]',
+                  ].join(' ')
+                }
+                to="/transactions"
+              >
+                Transactions
+              </NavLink>
             </nav>
           </div>
         </aside>
