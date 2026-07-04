@@ -1,4 +1,5 @@
 import { type ChangeEvent, useEffect, useState } from 'react'
+import TransactionFormModal from '../components/transactions/TransactionFormModal'
 import { categoryService } from '../services/categoryService'
 import { transactionService } from '../services/transactionService'
 import type { Category } from '../types/category'
@@ -97,6 +98,11 @@ function Transactions() {
   const [year, setYear] = useState<number>(currentYear)
   const [type, setType] = useState<TransactionType | undefined>(undefined)
   const [categoryId, setCategoryId] = useState<string | undefined>(undefined)
+  const [isTransactionModalOpen, setIsTransactionModalOpen] =
+    useState<boolean>(false)
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null)
+  const [refreshKey, setRefreshKey] = useState<number>(0)
 
   useEffect(() => {
     let isActive = true
@@ -135,7 +141,7 @@ function Transactions() {
     return (): void => {
       isActive = false
     }
-  }, [categoryId, month, type, year])
+  }, [categoryId, month, refreshKey, type, year])
 
   useEffect(() => {
     let isActive = true
@@ -213,6 +219,26 @@ function Transactions() {
     )
   }
 
+  const handleOpenCreateModal = (): void => {
+    setSelectedTransaction(null)
+    setIsTransactionModalOpen(true)
+  }
+
+  const handleOpenEditModal = (transaction: Transaction): void => {
+    setSelectedTransaction(transaction)
+    setIsTransactionModalOpen(true)
+  }
+
+  const handleCloseTransactionModal = (): void => {
+    setIsTransactionModalOpen(false)
+    setSelectedTransaction(null)
+  }
+
+  const handleTransactionSaved = (): void => {
+    setIsLoading(true)
+    setRefreshKey((currentRefreshKey) => currentRefreshKey + 1)
+  }
+
   const typeFilterValue: TypeFilterValue =
     type === TransactionType.Income
       ? 'income'
@@ -228,17 +254,27 @@ function Transactions() {
     <section className="mx-auto w-full max-w-7xl">
       <div className="overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(31,41,51,0.08)]">
         <div className="border-b border-[#E5E7EB] bg-[#EAF7F0] px-5 py-6 sm:px-8 lg:px-10">
-          <div className="min-w-0">
-            <p className="text-sm font-semibold uppercase tracking-normal text-[#2F855A]">
-              Transaction activity
-            </p>
-            <h2 className="mt-3 text-3xl font-bold text-[#1F2933] sm:text-4xl">
-              Transactions
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#374151] sm:text-base">
-              Review posted income and expenses with category, date, type, and
-              amount details.
-            </p>
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold uppercase tracking-normal text-[#2F855A]">
+                Transaction activity
+              </p>
+              <h2 className="mt-3 text-3xl font-bold text-[#1F2933] sm:text-4xl">
+                Transactions
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-[#374151] sm:text-base">
+                Review posted income and expenses with category, date, type,
+                and amount details.
+              </p>
+            </div>
+
+            <button
+              className="inline-flex w-full items-center justify-center rounded-2xl bg-[#3BAA72] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(59,170,114,0.22)] transition hover:bg-[#2F855A] sm:w-auto"
+              onClick={handleOpenCreateModal}
+              type="button"
+            >
+              New transaction
+            </button>
           </div>
         </div>
 
@@ -434,6 +470,13 @@ function Transactions() {
                         >
                           {formatCurrency(transaction.amount)}
                         </p>
+                        <button
+                          className="rounded-2xl border border-[#D1D5DB] bg-white px-4 py-2 text-sm font-semibold text-[#374151] transition hover:border-[#CF9F57]/60 hover:bg-[#FBF4E8] hover:text-[#1F2933]"
+                          onClick={() => handleOpenEditModal(transaction)}
+                          type="button"
+                        >
+                          Edit
+                        </button>
                       </div>
                     </li>
                   )
@@ -443,6 +486,13 @@ function Transactions() {
           ) : null}
         </div>
       </div>
+
+      <TransactionFormModal
+        isOpen={isTransactionModalOpen}
+        onClose={handleCloseTransactionModal}
+        onSuccess={handleTransactionSaved}
+        transaction={selectedTransaction}
+      />
     </section>
   )
 }
