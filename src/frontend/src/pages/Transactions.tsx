@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
+import { type ChangeEvent, useEffect, useState } from 'react'
+import { categoryService } from '../services/categoryService'
 import { transactionService } from '../services/transactionService'
+import type { Category } from '../types/category'
 import {
   TransactionType,
   type Transaction,
+  type TransactionFilters,
 } from '../types/transaction'
 
 type TransactionTypeView = {
@@ -11,6 +14,37 @@ type TransactionTypeView = {
   amountClassName: string
   accentClassName: string
 }
+
+type MonthOption = {
+  label: string
+  value: number
+}
+
+type TypeFilterValue = 'all' | 'income' | 'expense'
+
+const currentDate = new Date()
+const currentMonth = currentDate.getMonth() + 1
+const currentYear = currentDate.getFullYear()
+
+const monthOptions: MonthOption[] = [
+  { label: 'January', value: 1 },
+  { label: 'February', value: 2 },
+  { label: 'March', value: 3 },
+  { label: 'April', value: 4 },
+  { label: 'May', value: 5 },
+  { label: 'June', value: 6 },
+  { label: 'July', value: 7 },
+  { label: 'August', value: 8 },
+  { label: 'September', value: 9 },
+  { label: 'October', value: 10 },
+  { label: 'November', value: 11 },
+  { label: 'December', value: 12 },
+]
+
+const yearOptions: number[] = [currentYear - 1, currentYear, currentYear + 1]
+
+const selectClassName =
+  'mt-2 w-full rounded-2xl border border-[#D1D5DB] bg-white px-4 py-3 text-sm font-semibold text-[#374151] outline-none transition focus:border-[#3BAA72] focus:ring-4 focus:ring-[#EAF7F0] disabled:cursor-not-allowed disabled:bg-[#F1F5F2] disabled:text-[#6B7280]'
 
 const formatCurrency = (value: number): string =>
   new Intl.NumberFormat('en-US', {
@@ -54,14 +88,27 @@ const getTransactionTypeView = (
 
 function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isCategoryLoading, setIsCategoryLoading] = useState<boolean>(true)
   const [error, setError] = useState<string>('')
+  const [categoryError, setCategoryError] = useState<string>('')
+  const [month, setMonth] = useState<number>(currentMonth)
+  const [year, setYear] = useState<number>(currentYear)
+  const [type, setType] = useState<TransactionType | undefined>(undefined)
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     let isActive = true
+    const filters: TransactionFilters = {
+      categoryId,
+      month,
+      type,
+      year,
+    }
 
     void transactionService
-      .getTransactions()
+      .getTransactions(filters)
       .then((loadedTransactions) => {
         if (!isActive) {
           return
@@ -88,7 +135,94 @@ function Transactions() {
     return (): void => {
       isActive = false
     }
+  }, [categoryId, month, type, year])
+
+  useEffect(() => {
+    let isActive = true
+
+    void categoryService
+      .getCategories()
+      .then((loadedCategories) => {
+        if (!isActive) {
+          return
+        }
+
+        setCategories(loadedCategories)
+        setCategoryError('')
+      })
+      .catch(() => {
+        if (!isActive) {
+          return
+        }
+
+        setCategories([])
+        setCategoryId(undefined)
+        setCategoryError('Categories unavailable')
+      })
+      .finally(() => {
+        if (!isActive) {
+          return
+        }
+
+        setIsCategoryLoading(false)
+      })
+
+    return (): void => {
+      isActive = false
+    }
   }, [])
+
+  const handleMonthChange = (
+    event: ChangeEvent<HTMLSelectElement>,
+  ): void => {
+    setIsLoading(true)
+    setMonth(Number(event.target.value))
+  }
+
+  const handleYearChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    setIsLoading(true)
+    setYear(Number(event.target.value))
+  }
+
+  const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    const selectedType = event.target.value as TypeFilterValue
+
+    setIsLoading(true)
+
+    if (selectedType === 'income') {
+      setType(TransactionType.Income)
+      return
+    }
+
+    if (selectedType === 'expense') {
+      setType(TransactionType.Expense)
+      return
+    }
+
+    setType(undefined)
+  }
+
+  const handleCategoryChange = (
+    event: ChangeEvent<HTMLSelectElement>,
+  ): void => {
+    const selectedCategoryId = event.target.value
+
+    setIsLoading(true)
+    setCategoryId(
+      selectedCategoryId.length > 0 ? selectedCategoryId : undefined,
+    )
+  }
+
+  const typeFilterValue: TypeFilterValue =
+    type === TransactionType.Income
+      ? 'income'
+      : type === TransactionType.Expense
+        ? 'expense'
+        : 'all'
+
+  const selectedMonthLabel =
+    monthOptions.find((monthOption) => monthOption.value === month)?.label ??
+    'selected month'
 
   return (
     <section className="mx-auto w-full max-w-7xl">
@@ -109,6 +243,108 @@ function Transactions() {
         </div>
 
         <div className="px-5 py-6 sm:px-8 lg:px-10">
+          <div className="mb-6 rounded-3xl border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.06)]">
+            <div className="flex flex-col gap-2 border-b border-[#E5E7EB] pb-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-[#1F2933]">
+                  Filters
+                </p>
+                <p className="mt-1 text-sm text-[#6B7280]">
+                  Showing {selectedMonthLabel} {year}
+                </p>
+              </div>
+              {isLoading ? (
+                <span className="inline-flex w-fit items-center rounded-full bg-[#EAF7F0] px-3 py-1 text-xs font-semibold text-[#2F855A]">
+                  Updating
+                </span>
+              ) : null}
+            </div>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <label className="block">
+                <span className="text-sm font-semibold text-[#374151]">
+                  Month
+                </span>
+                <select
+                  className={selectClassName}
+                  onChange={handleMonthChange}
+                  value={month}
+                >
+                  {monthOptions.map((monthOption) => (
+                    <option key={monthOption.value} value={monthOption.value}>
+                      {monthOption.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-semibold text-[#374151]">
+                  Year
+                </span>
+                <select
+                  className={selectClassName}
+                  onChange={handleYearChange}
+                  value={year}
+                >
+                  {yearOptions.map((yearOption) => (
+                    <option key={yearOption} value={yearOption}>
+                      {yearOption}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-semibold text-[#374151]">
+                  Type
+                </span>
+                <select
+                  className={selectClassName}
+                  onChange={handleTypeChange}
+                  value={typeFilterValue}
+                >
+                  <option value="all">All</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-semibold text-[#374151]">
+                  Category
+                </span>
+                <select
+                  className={selectClassName}
+                  disabled={isCategoryLoading || categoryError.length > 0}
+                  onChange={handleCategoryChange}
+                  value={categoryId ?? ''}
+                >
+                  {categoryError.length > 0 ? (
+                    <option value="">Categories unavailable</option>
+                  ) : (
+                    <option value="">
+                      {isCategoryLoading
+                        ? 'Loading categories'
+                        : 'All categories'}
+                    </option>
+                  )}
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            {categoryError.length > 0 ? (
+              <p className="mt-4 rounded-2xl bg-[#FBF4E8] px-4 py-3 text-sm font-medium text-[#8A642E]">
+                Category filtering is temporarily unavailable.
+              </p>
+            ) : null}
+          </div>
+
           {isLoading ? (
             <div className="space-y-4">
               {[0, 1, 2].map((item) => (
@@ -146,11 +382,10 @@ function Transactions() {
           {!isLoading && !error && transactions.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-[#D1D5DB] bg-white p-8 text-center shadow-sm">
               <p className="text-base font-semibold text-[#1F2933]">
-                No transactions yet
+                No transactions found
               </p>
               <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#6B7280]">
-                Your income and expense records will appear here once they are
-                available for your account.
+                There are no transactions for the selected period and filters.
               </p>
             </div>
           ) : null}
