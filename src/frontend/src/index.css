@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/*
+  Light Prosperity Finance design tokens.
+  Centralized product palette for reusable Tailwind color utilities.
+*/
+@theme {
+  --color-brand-primary: #3BAA72;
+  --color-brand-primary-dark: #2F855A;
+  --color-brand-primary-soft: #EAF7F0;
+
+  --color-brand-gold: #CF9F57;
+  --color-brand-gold-soft: #FBF4E8;
+
+  --color-brand-background: #F8FAF7;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-surface-muted: #F1F5F2;
+
+  --color-brand-text-strong: #1F2933;
+  --color-brand-text: #374151;
+  --color-brand-text-muted: #6B7280;
+
+  --color-brand-border: #E5E7EB;
+  --color-brand-border-strong: #D1D5DB;
+
+  --color-brand-error: #DC2626;
+  --color-brand-error-soft: #FEF2F2;
+}
