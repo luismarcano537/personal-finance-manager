@@ -31,10 +31,10 @@ const formatCurrency = (value: number): string =>
 
 const getFilterButtonClasses = (isSelected: boolean): string =>
   [
-    'rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#3BAA72] focus:ring-offset-2 focus:ring-offset-white',
+    'rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-white',
     isSelected
-      ? 'bg-[#3BAA72] text-white shadow-sm'
-      : 'text-[#374151] hover:bg-[#EAF7F0] hover:text-[#2F855A]',
+      ? 'bg-brand-primary text-white shadow-sm'
+      : 'text-brand-text hover:bg-brand-primary-soft hover:text-brand-primary-dark',
   ].join(' ')
 
 function CategorySummaryList({
@@ -48,19 +48,19 @@ function CategorySummaryList({
     <section className="mt-10">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-normal text-[#2F855A]">
+          <p className="text-sm font-semibold uppercase tracking-normal text-brand-primary-dark">
             Categories
           </p>
-          <h3 className="mt-2 text-2xl font-bold text-[#1F2933]">
+          <h3 className="mt-2 text-2xl font-bold text-brand-text-strong">
             Summary by category
           </h3>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#6B7280]">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-brand-text-muted">
             Review this month's category totals with a clear view of activity
             and value.
           </p>
         </div>
 
-        <div className="inline-flex w-full rounded-full border border-[#E5E7EB] bg-white p-1 shadow-sm sm:w-auto">
+        <div className="inline-flex w-full rounded-full border border-brand-border bg-white p-1 shadow-sm sm:w-auto">
           {filterOptions.map((option) => {
             const isSelected = selectedType === option.value
 
@@ -79,32 +79,32 @@ function CategorySummaryList({
       </div>
 
       {isLoading ? (
-        <div className="mt-5 rounded-3xl border border-[#E5E7EB] bg-white p-6 shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
+        <div className="mt-5 rounded-3xl border border-brand-border bg-white p-6 shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
           <div className="flex items-center gap-4">
-            <span className="h-10 w-10 animate-pulse rounded-2xl bg-[#EAF7F0]" />
+            <span className="h-10 w-10 animate-pulse rounded-2xl bg-brand-primary-soft" />
             <div className="min-w-0 flex-1">
-              <div className="h-3 w-32 animate-pulse rounded-full bg-[#E5E7EB]" />
-              <div className="mt-3 h-3 w-full max-w-md animate-pulse rounded-full bg-[#F1F5F2]" />
+              <div className="h-3 w-32 animate-pulse rounded-full bg-brand-border" />
+              <div className="mt-3 h-3 w-full max-w-md animate-pulse rounded-full bg-brand-surface-muted" />
             </div>
           </div>
         </div>
       ) : null}
 
       {!isLoading && error ? (
-        <div className="mt-5 rounded-3xl border border-[#E5E7EB] bg-[#FEF2F2] p-6 shadow-sm">
-          <p className="text-sm font-semibold text-[#DC2626]">
+        <div className="mt-5 rounded-3xl border border-brand-border bg-brand-error-soft p-6 shadow-sm">
+          <p className="text-sm font-semibold text-brand-error">
             Category summary unavailable
           </p>
-          <p className="mt-2 text-sm leading-6 text-[#DC2626]">{error}</p>
+          <p className="mt-2 text-sm leading-6 text-brand-error">{error}</p>
         </div>
       ) : null}
 
       {!isLoading && !error && categories.length === 0 ? (
-        <div className="mt-5 rounded-3xl border border-dashed border-[#D1D5DB] bg-white p-8 text-center shadow-sm">
-          <p className="text-base font-semibold text-[#1F2933]">
+        <div className="mt-5 rounded-3xl border border-dashed border-brand-border-strong bg-white p-8 text-center shadow-sm">
+          <p className="text-base font-semibold text-brand-text-strong">
             No category activity yet
           </p>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#6B7280]">
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-brand-text-muted">
             There is no income or expense data for the current month yet. Once
             transactions are registered, categories will appear here.
           </p>
@@ -112,23 +112,23 @@ function CategorySummaryList({
       ) : null}
 
       {!isLoading && !error && categories.length > 0 ? (
-        <div className="mt-5 overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
-          <ul className="divide-y divide-[#E5E7EB]">
+        <div className="mt-5 overflow-hidden rounded-3xl border border-brand-border bg-white shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
+          <ul className="divide-y divide-brand-border">
             {categories.map((category) => (
               <li
-                className="grid gap-4 p-5 transition hover:bg-[#F8FAF7] sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center sm:p-6"
+                className="grid gap-4 p-5 transition hover:bg-brand-background sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center sm:p-6"
                 key={category.categoryId}
               >
                 <div className="flex min-w-0 items-center gap-4">
                   <span
                     aria-hidden="true"
-                    className="h-11 w-2 shrink-0 rounded-full bg-[#CF9F57]"
+                    className="h-11 w-2 shrink-0 rounded-full bg-brand-gold"
                   />
                   <div className="min-w-0">
-                    <p className="truncate text-base font-semibold text-[#1F2933]">
+                    <p className="truncate text-base font-semibold text-brand-text-strong">
                       {category.categoryName}
                     </p>
-                    <p className="mt-1 text-sm text-[#6B7280]">
+                    <p className="mt-1 text-sm text-brand-text-muted">
                       {category.transactionsCount}{' '}
                       {category.transactionsCount === 1
                         ? 'transaction'
@@ -137,10 +137,10 @@ function CategorySummaryList({
                   </div>
                 </div>
 
-                <p className="text-sm font-semibold text-[#6B7280] sm:text-right">
+                <p className="text-sm font-semibold text-brand-text-muted sm:text-right">
                   Total
                 </p>
-                <p className="break-words text-xl font-bold text-[#1F2933] sm:min-w-32 sm:text-right">
+                <p className="break-words text-xl font-bold text-brand-text-strong sm:min-w-32 sm:text-right">
                   {formatCurrency(category.total)}
                 </p>
               </li>

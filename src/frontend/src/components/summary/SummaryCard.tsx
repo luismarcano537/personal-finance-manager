@@ -17,39 +17,39 @@ type ToneStyle = {
 
 const toneStyles: Record<SummaryCardTone, ToneStyle> = {
   default: {
-    accent: 'bg-[#D1D5DB]',
-    badge: 'bg-[#F1F5F2] text-[#374151]',
-    border: 'border-[#E5E7EB]',
-    label: 'text-[#6B7280]',
-    value: 'text-[#1F2933]',
+    accent: 'bg-brand-border-strong',
+    badge: 'bg-brand-surface-muted text-brand-text',
+    border: 'border-brand-border',
+    label: 'text-brand-text-muted',
+    value: 'text-brand-text-strong',
   },
   income: {
-    accent: 'bg-[#3BAA72]',
-    badge: 'bg-[#EAF7F0] text-[#2F855A]',
-    border: 'border-[#E5E7EB]',
-    label: 'text-[#2F855A]',
-    value: 'text-[#1F2933]',
+    accent: 'bg-brand-primary',
+    badge: 'bg-brand-primary-soft text-brand-primary-dark',
+    border: 'border-brand-border',
+    label: 'text-brand-primary-dark',
+    value: 'text-brand-text-strong',
   },
   expense: {
-    accent: 'bg-[#DC2626]',
-    badge: 'bg-[#FEF2F2] text-[#DC2626]',
-    border: 'border-[#E5E7EB]',
-    label: 'text-[#DC2626]',
-    value: 'text-[#1F2933]',
+    accent: 'bg-brand-error',
+    badge: 'bg-brand-error-soft text-brand-error',
+    border: 'border-brand-border',
+    label: 'text-brand-error',
+    value: 'text-brand-text-strong',
   },
   balance: {
-    accent: 'bg-[#CF9F57]',
-    badge: 'bg-[#FBF4E8] text-[#CF9F57]',
-    border: 'border-[#E5E7EB]',
-    label: 'text-[#CF9F57]',
-    value: 'text-[#1F2933]',
+    accent: 'bg-brand-gold',
+    badge: 'bg-brand-gold-soft text-brand-gold',
+    border: 'border-brand-border',
+    label: 'text-brand-gold',
+    value: 'text-brand-text-strong',
   },
   transactions: {
-    accent: 'bg-[#CF9F57]',
-    badge: 'bg-[#F1F5F2] text-[#374151]',
-    border: 'border-[#E5E7EB]',
-    label: 'text-[#6B7280]',
-    value: 'text-[#1F2933]',
+    accent: 'bg-brand-gold',
+    badge: 'bg-brand-surface-muted text-brand-text',
+    border: 'border-brand-border',
+    label: 'text-brand-text-muted',
+    value: 'text-brand-text-strong',
   },
 }
 
@@ -71,7 +71,7 @@ function SummaryCard({
         <div className="min-w-0">
           <p className={`text-sm font-semibold ${styles.label}`}>{label}</p>
           {helper ? (
-            <p className="mt-1 text-xs font-medium text-[#6B7280]">{helper}</p>
+            <p className="mt-1 text-xs font-medium text-brand-text-muted">{helper}</p>
           ) : null}
         </div>
         <span

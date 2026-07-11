@@ -46,7 +46,7 @@ const monthOptions: MonthOption[] = [
 const yearOptions: number[] = [currentYear - 1, currentYear, currentYear + 1]
 
 const selectClassName =
-  'mt-2 w-full rounded-2xl border border-[#D1D5DB] bg-white px-4 py-3 text-sm font-semibold text-[#374151] outline-none transition focus:border-[#3BAA72] focus:ring-4 focus:ring-[#EAF7F0] disabled:cursor-not-allowed disabled:bg-[#F1F5F2] disabled:text-[#6B7280]'
+  'mt-2 w-full rounded-2xl border border-brand-border-strong bg-white px-4 py-3 text-sm font-semibold text-brand-text outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary-soft disabled:cursor-not-allowed disabled:bg-brand-surface-muted disabled:text-brand-text-muted'
 
 const formatCurrency = (value: number): string =>
   new Intl.NumberFormat('en-US', {
@@ -73,17 +73,17 @@ const getTransactionTypeView = (
 ): TransactionTypeView => {
   if (type === TransactionType.Income) {
     return {
-      accentClassName: 'bg-[#3BAA72]',
-      amountClassName: 'text-[#2F855A]',
-      badgeClassName: 'bg-[#EAF7F0] text-[#2F855A]',
+      accentClassName: 'bg-brand-primary',
+      amountClassName: 'text-brand-primary-dark',
+      badgeClassName: 'bg-brand-primary-soft text-brand-primary-dark',
       label: 'Income',
     }
   }
 
   return {
-    accentClassName: 'bg-[#CF9F57]',
-    amountClassName: 'text-[#DC2626]',
-    badgeClassName: 'bg-[#FEF2F2] text-[#DC2626]',
+    accentClassName: 'bg-brand-gold',
+    amountClassName: 'text-brand-error',
+    badgeClassName: 'bg-brand-error-soft text-brand-error',
     label: 'Expense',
   }
 }
@@ -295,24 +295,24 @@ function Transactions() {
 
   return (
     <section className="mx-auto w-full max-w-7xl">
-      <div className="overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(31,41,51,0.08)]">
-        <div className="border-b border-[#E5E7EB] bg-[#EAF7F0] px-5 py-6 sm:px-8 lg:px-10">
+      <div className="overflow-hidden rounded-3xl border border-brand-border bg-white shadow-[0_24px_70px_rgba(31,41,51,0.08)]">
+        <div className="border-b border-brand-border bg-brand-primary-soft px-5 py-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <p className="text-sm font-semibold uppercase tracking-normal text-[#2F855A]">
+              <p className="text-sm font-semibold uppercase tracking-normal text-brand-primary-dark">
                 Transaction activity
               </p>
-              <h2 className="mt-3 text-3xl font-bold text-[#1F2933] sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-bold text-brand-text-strong sm:text-4xl">
                 Transactions
               </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-[#374151] sm:text-base">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-brand-text sm:text-base">
                 Review posted income and expenses with category, date, type,
                 and amount details.
               </p>
             </div>
 
             <button
-              className="inline-flex w-full items-center justify-center rounded-2xl bg-[#3BAA72] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(59,170,114,0.22)] transition hover:bg-[#2F855A] sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-2xl bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(59,170,114,0.22)] transition hover:bg-brand-primary-dark sm:w-auto"
               onClick={handleOpenCreateModal}
               type="button"
             >
@@ -322,18 +322,18 @@ function Transactions() {
         </div>
 
         <div className="px-5 py-6 sm:px-8 lg:px-10">
-          <div className="mb-6 rounded-3xl border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.06)]">
-            <div className="flex flex-col gap-2 border-b border-[#E5E7EB] pb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-6 rounded-3xl border border-brand-border bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.06)]">
+            <div className="flex flex-col gap-2 border-b border-brand-border pb-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold text-[#1F2933]">
+                <p className="text-sm font-semibold text-brand-text-strong">
                   Filters
                 </p>
-                <p className="mt-1 text-sm text-[#6B7280]">
+                <p className="mt-1 text-sm text-brand-text-muted">
                   Showing {selectedMonthLabel} {year}
                 </p>
               </div>
               {isLoading ? (
-                <span className="inline-flex w-fit items-center rounded-full bg-[#EAF7F0] px-3 py-1 text-xs font-semibold text-[#2F855A]">
+                <span className="inline-flex w-fit items-center rounded-full bg-brand-primary-soft px-3 py-1 text-xs font-semibold text-brand-primary-dark">
                   Updating
                 </span>
               ) : null}
@@ -341,7 +341,7 @@ function Transactions() {
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <label className="block">
-                <span className="text-sm font-semibold text-[#374151]">
+                <span className="text-sm font-semibold text-brand-text">
                   Month
                 </span>
                 <select
@@ -358,7 +358,7 @@ function Transactions() {
               </label>
 
               <label className="block">
-                <span className="text-sm font-semibold text-[#374151]">
+                <span className="text-sm font-semibold text-brand-text">
                   Year
                 </span>
                 <select
@@ -375,7 +375,7 @@ function Transactions() {
               </label>
 
               <label className="block">
-                <span className="text-sm font-semibold text-[#374151]">
+                <span className="text-sm font-semibold text-brand-text">
                   Type
                 </span>
                 <select
@@ -390,7 +390,7 @@ function Transactions() {
               </label>
 
               <label className="block">
-                <span className="text-sm font-semibold text-[#374151]">
+                <span className="text-sm font-semibold text-brand-text">
                   Category
                 </span>
                 <select
@@ -418,7 +418,7 @@ function Transactions() {
             </div>
 
             {categoryError.length > 0 ? (
-              <p className="mt-4 rounded-2xl bg-[#FBF4E8] px-4 py-3 text-sm font-medium text-[#8A642E]">
+              <p className="mt-4 rounded-2xl bg-brand-gold-soft px-4 py-3 text-sm font-medium text-[#8A642E]">
                 Category filtering is temporarily unavailable.
               </p>
             ) : null}
@@ -428,20 +428,20 @@ function Transactions() {
             <div className="space-y-4">
               {[0, 1, 2].map((item) => (
                 <div
-                  className="rounded-3xl border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.07)]"
+                  className="rounded-3xl border border-brand-border bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.07)]"
                   key={item}
                 >
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex min-w-0 items-center gap-4">
-                      <span className="h-14 w-2 shrink-0 animate-pulse rounded-full bg-[#EAF7F0]" />
+                      <span className="h-14 w-2 shrink-0 animate-pulse rounded-full bg-brand-primary-soft" />
                       <div className="min-w-0 flex-1">
-                        <div className="h-4 w-44 animate-pulse rounded-full bg-[#E5E7EB]" />
-                        <div className="mt-3 h-3 w-32 animate-pulse rounded-full bg-[#F1F5F2]" />
+                        <div className="h-4 w-44 animate-pulse rounded-full bg-brand-border" />
+                        <div className="mt-3 h-3 w-32 animate-pulse rounded-full bg-brand-surface-muted" />
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-20 animate-pulse rounded-full bg-[#FBF4E8]" />
-                      <div className="h-5 w-24 animate-pulse rounded-full bg-[#E5E7EB]" />
+                      <div className="h-8 w-20 animate-pulse rounded-full bg-brand-gold-soft" />
+                      <div className="h-5 w-24 animate-pulse rounded-full bg-brand-border" />
                     </div>
                   </div>
                 </div>
@@ -450,28 +450,28 @@ function Transactions() {
           ) : null}
 
           {!isLoading && error ? (
-            <div className="rounded-3xl border border-[#E5E7EB] bg-[#FEF2F2] p-6 shadow-sm">
-              <p className="text-sm font-semibold text-[#DC2626]">
+            <div className="rounded-3xl border border-brand-border bg-brand-error-soft p-6 shadow-sm">
+              <p className="text-sm font-semibold text-brand-error">
                 Transactions unavailable
               </p>
-              <p className="mt-2 text-sm leading-6 text-[#DC2626]">{error}</p>
+              <p className="mt-2 text-sm leading-6 text-brand-error">{error}</p>
             </div>
           ) : null}
 
           {!isLoading && !error && transactions.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-[#D1D5DB] bg-white p-8 text-center shadow-sm">
-              <p className="text-base font-semibold text-[#1F2933]">
+            <div className="rounded-3xl border border-dashed border-brand-border-strong bg-white p-8 text-center shadow-sm">
+              <p className="text-base font-semibold text-brand-text-strong">
                 No transactions found
               </p>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#6B7280]">
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-brand-text-muted">
                 There are no transactions for the selected period and filters.
               </p>
             </div>
           ) : null}
 
           {!isLoading && !error && transactions.length > 0 ? (
-            <div className="overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
-              <ul className="divide-y divide-[#E5E7EB]">
+            <div className="overflow-hidden rounded-3xl border border-brand-border bg-white shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
+              <ul className="divide-y divide-brand-border">
                 {transactions.map((transaction) => {
                   const typeView = getTransactionTypeView(transaction.type)
                   const categoryName =
@@ -479,7 +479,7 @@ function Transactions() {
 
                   return (
                     <li
-                      className="flex flex-col gap-5 p-5 transition hover:bg-[#F8FAF7] lg:flex-row lg:items-center lg:justify-between lg:p-6"
+                      className="flex flex-col gap-5 p-5 transition hover:bg-brand-background lg:flex-row lg:items-center lg:justify-between lg:p-6"
                       key={transaction.id}
                     >
                       <div className="flex min-w-0 items-start gap-4">
@@ -488,10 +488,10 @@ function Transactions() {
                           className={`mt-1 h-16 w-2 shrink-0 rounded-full ${typeView.accentClassName}`}
                         />
                         <div className="min-w-0">
-                          <p className="break-words text-base font-semibold text-[#1F2933]">
+                          <p className="break-words text-base font-semibold text-brand-text-strong">
                             {transaction.description}
                           </p>
-                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#6B7280]">
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-brand-text-muted">
                             <span>
                               {formatTransactionDate(
                                 transaction.transactionDate,
@@ -514,14 +514,14 @@ function Transactions() {
                           {formatCurrency(transaction.amount)}
                         </p>
                         <button
-                          className="rounded-2xl border border-[#D1D5DB] bg-white px-4 py-2 text-sm font-semibold text-[#374151] transition hover:border-[#CF9F57]/60 hover:bg-[#FBF4E8] hover:text-[#1F2933]"
+                          className="rounded-2xl border border-brand-border-strong bg-white px-4 py-2 text-sm font-semibold text-brand-text transition hover:border-brand-gold/60 hover:bg-brand-gold-soft hover:text-brand-text-strong"
                           onClick={() => handleOpenEditModal(transaction)}
                           type="button"
                         >
                           Edit
                         </button>
                         <button
-                          className="rounded-2xl border border-[#DC2626]/25 bg-white px-4 py-2 text-sm font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2] disabled:cursor-not-allowed disabled:opacity-60"
+                          className="rounded-2xl border border-brand-error/25 bg-white px-4 py-2 text-sm font-semibold text-brand-error transition hover:bg-brand-error-soft disabled:cursor-not-allowed disabled:opacity-60"
                           onClick={() => handleOpenDeleteModal(transaction)}
                           type="button"
                         >

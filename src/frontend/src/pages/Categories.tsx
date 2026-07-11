@@ -13,15 +13,15 @@ type CategoryTypeView = {
 const getCategoryTypeView = (type: Category['type']): CategoryTypeView => {
   if (type === CategoryType.Income) {
     return {
-      accentClassName: 'bg-[#3BAA72]',
-      badgeClassName: 'bg-[#EAF7F0] text-[#2F855A]',
+      accentClassName: 'bg-brand-primary',
+      badgeClassName: 'bg-brand-primary-soft text-brand-primary-dark',
       label: 'Income',
     }
   }
 
   return {
-    accentClassName: 'bg-[#CF9F57]',
-    badgeClassName: 'bg-[#FBF4E8] text-[#8A642E]',
+    accentClassName: 'bg-brand-gold',
+    badgeClassName: 'bg-brand-gold-soft text-[#8A642E]',
     label: 'Expense',
   }
 }
@@ -122,24 +122,24 @@ function Categories() {
   return (
     <>
       <section className="mx-auto w-full max-w-7xl">
-        <div className="overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_24px_70px_rgba(31,41,51,0.08)]">
-          <div className="border-b border-[#E5E7EB] bg-[#EAF7F0] px-5 py-6 sm:px-8 lg:px-10">
+        <div className="overflow-hidden rounded-3xl border border-brand-border bg-white shadow-[0_24px_70px_rgba(31,41,51,0.08)]">
+          <div className="border-b border-brand-border bg-brand-primary-soft px-5 py-6 sm:px-8 lg:px-10">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-normal text-[#2F855A]">
+                <p className="text-sm font-semibold uppercase tracking-normal text-brand-primary-dark">
                   Category management
                 </p>
-                <h2 className="mt-3 text-3xl font-bold text-[#1F2933] sm:text-4xl">
+                <h2 className="mt-3 text-3xl font-bold text-brand-text-strong sm:text-4xl">
                   Categories
                 </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#374151] sm:text-base">
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-brand-text sm:text-base">
                   Review the income and expense categories used to organize your
                   financial activity.
                 </p>
               </div>
 
               <button
-                className="inline-flex w-full items-center justify-center rounded-2xl bg-[#3BAA72] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(59,170,114,0.22)] transition hover:bg-[#2F855A] sm:w-auto"
+                className="inline-flex w-full items-center justify-center rounded-2xl bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(59,170,114,0.22)] transition hover:bg-brand-primary-dark sm:w-auto"
                 onClick={handleOpenCreateModal}
                 type="button"
               >
@@ -153,16 +153,16 @@ function Categories() {
               <div className="space-y-4">
                 {[0, 1, 2].map((item) => (
                   <div
-                    className="rounded-3xl border border-[#E5E7EB] bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.07)]"
+                    className="rounded-3xl border border-brand-border bg-white p-5 shadow-[0_18px_45px_rgba(31,41,51,0.07)]"
                     key={item}
                   >
                     <div className="flex items-center gap-4">
-                      <span className="h-12 w-2 shrink-0 animate-pulse rounded-full bg-[#EAF7F0]" />
+                      <span className="h-12 w-2 shrink-0 animate-pulse rounded-full bg-brand-primary-soft" />
                       <div className="min-w-0 flex-1">
-                        <div className="h-4 w-40 animate-pulse rounded-full bg-[#E5E7EB]" />
-                        <div className="mt-3 h-3 w-28 animate-pulse rounded-full bg-[#F1F5F2]" />
+                        <div className="h-4 w-40 animate-pulse rounded-full bg-brand-border" />
+                        <div className="mt-3 h-3 w-28 animate-pulse rounded-full bg-brand-surface-muted" />
                       </div>
-                      <div className="hidden h-8 w-20 animate-pulse rounded-full bg-[#FBF4E8] sm:block" />
+                      <div className="hidden h-8 w-20 animate-pulse rounded-full bg-brand-gold-soft sm:block" />
                     </div>
                   </div>
                 ))}
@@ -170,22 +170,22 @@ function Categories() {
             ) : null}
 
             {!isLoading && error ? (
-              <div className="rounded-3xl border border-[#E5E7EB] bg-[#FEF2F2] p-6 shadow-sm">
-                <p className="text-sm font-semibold text-[#DC2626]">
+              <div className="rounded-3xl border border-brand-border bg-brand-error-soft p-6 shadow-sm">
+                <p className="text-sm font-semibold text-brand-error">
                   Categories unavailable
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[#DC2626]">
+                <p className="mt-2 text-sm leading-6 text-brand-error">
                   {error}
                 </p>
               </div>
             ) : null}
 
             {!isLoading && !error && categories.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-[#D1D5DB] bg-white p-8 text-center shadow-sm">
-                <p className="text-base font-semibold text-[#1F2933]">
+              <div className="rounded-3xl border border-dashed border-brand-border-strong bg-white p-8 text-center shadow-sm">
+                <p className="text-base font-semibold text-brand-text-strong">
                   No categories yet
                 </p>
-                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#6B7280]">
+                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-brand-text-muted">
                   Categories will appear here once they are available for your
                   account.
                 </p>
@@ -193,14 +193,14 @@ function Categories() {
             ) : null}
 
             {!isLoading && !error && categories.length > 0 ? (
-              <div className="overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
-                <ul className="divide-y divide-[#E5E7EB]">
+              <div className="overflow-hidden rounded-3xl border border-brand-border bg-white shadow-[0_18px_45px_rgba(31,41,51,0.07)]">
+                <ul className="divide-y divide-brand-border">
                   {categories.map((category) => {
                     const typeView = getCategoryTypeView(category.type)
 
                     return (
                       <li
-                        className="flex flex-col gap-4 p-5 transition hover:bg-[#F8FAF7] sm:flex-row sm:items-center sm:justify-between sm:p-6"
+                        className="flex flex-col gap-4 p-5 transition hover:bg-brand-background sm:flex-row sm:items-center sm:justify-between sm:p-6"
                         key={category.id}
                       >
                         <div className="flex min-w-0 items-center gap-4">
@@ -209,10 +209,10 @@ function Categories() {
                             className={`h-12 w-2 shrink-0 rounded-full ${typeView.accentClassName}`}
                           />
                           <div className="min-w-0">
-                            <p className="truncate text-base font-semibold text-[#1F2933]">
+                            <p className="truncate text-base font-semibold text-brand-text-strong">
                               {category.name}
                             </p>
-                            <p className="mt-1 text-sm text-[#6B7280]">
+                            <p className="mt-1 text-sm text-brand-text-muted">
                               Category type
                             </p>
                           </div>
@@ -225,14 +225,14 @@ function Categories() {
                             {typeView.label}
                           </span>
                           <button
-                            className="rounded-2xl border border-[#D1D5DB] bg-white px-4 py-2 text-sm font-semibold text-[#374151] transition hover:border-[#CF9F57] hover:bg-[#FBF4E8] hover:text-[#1F2933]"
+                            className="rounded-2xl border border-brand-border-strong bg-white px-4 py-2 text-sm font-semibold text-brand-text transition hover:border-brand-gold hover:bg-brand-gold-soft hover:text-brand-text-strong"
                             onClick={() => handleOpenEditModal(category)}
                             type="button"
                           >
                             Edit
                           </button>
                           <button
-                            className="rounded-2xl border border-[#DC2626]/25 bg-white px-4 py-2 text-sm font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2]"
+                            className="rounded-2xl border border-brand-error/25 bg-white px-4 py-2 text-sm font-semibold text-brand-error transition hover:bg-brand-error-soft"
                             onClick={() => handleOpenDeleteModal(category)}
                             type="button"
                           >
