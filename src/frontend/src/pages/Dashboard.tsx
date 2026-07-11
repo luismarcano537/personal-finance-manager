@@ -15,6 +15,10 @@ import type {
   MonthlySummary,
   TransactionType,
 } from '../types/summary'
+import { getApiErrorMessage } from '../utils/getApiErrorMessage'
+
+const dashboardLoadErrorMessage =
+  'Unable to load dashboard data. Please try again.'
 
 const formatCurrency = (value: number): string =>
   new Intl.NumberFormat('en-US', {
@@ -79,8 +83,8 @@ function Dashboard() {
         year: selectedYear,
       })
       setSummary(monthlySummary)
-    } catch {
-      setError('Could not load the monthly summary. Please try again later.')
+    } catch (caughtError) {
+      setError(getApiErrorMessage(caughtError, dashboardLoadErrorMessage))
     } finally {
       setLoading(false)
     }
@@ -104,9 +108,9 @@ function Dashboard() {
         categoryParams,
       )
       setCategorySummary(categories)
-    } catch {
+    } catch (caughtError) {
       setCategoryError(
-        'Could not load the category summary. Please try again later.',
+        getApiErrorMessage(caughtError, dashboardLoadErrorMessage),
       )
     } finally {
       setCategoryLoading(false)

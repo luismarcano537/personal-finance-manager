@@ -9,6 +9,14 @@ import {
   type Transaction,
   type TransactionFilters,
 } from '../types/transaction'
+import { getApiErrorMessage } from '../utils/getApiErrorMessage'
+
+const categoriesLoadErrorMessage =
+  'Unable to load categories. Please try again.'
+const transactionsLoadErrorMessage =
+  'Unable to load transactions. Please try again.'
+const transactionDeleteErrorMessage =
+  'Unable to delete transaction. Please try again.'
 
 type TransactionTypeView = {
   label: string
@@ -130,12 +138,12 @@ function Transactions() {
         setTransactions(loadedTransactions)
         setError('')
       })
-      .catch(() => {
+      .catch((caughtError: unknown) => {
         if (!isActive) {
           return
         }
 
-        setError('Could not load transactions. Please try again later.')
+        setError(getApiErrorMessage(caughtError, transactionsLoadErrorMessage))
       })
       .finally(() => {
         if (!isActive) {
@@ -163,14 +171,14 @@ function Transactions() {
         setCategories(loadedCategories)
         setCategoryError('')
       })
-      .catch(() => {
+      .catch((caughtError: unknown) => {
         if (!isActive) {
           return
         }
 
         setCategories([])
         setCategoryId(undefined)
-        setCategoryError('Categories unavailable')
+        setCategoryError(getApiErrorMessage(caughtError, categoriesLoadErrorMessage))
       })
       .finally(() => {
         if (!isActive) {
@@ -273,9 +281,9 @@ function Transactions() {
       setTransactionToDelete(null)
       setIsLoading(true)
       setRefreshKey((currentRefreshKey) => currentRefreshKey + 1)
-    } catch {
+    } catch (caughtError) {
       setDeleteTransactionError(
-        'Could not delete this transaction. Please try again.',
+        getApiErrorMessage(caughtError, transactionDeleteErrorMessage),
       )
     } finally {
       setIsDeletingTransaction(false)

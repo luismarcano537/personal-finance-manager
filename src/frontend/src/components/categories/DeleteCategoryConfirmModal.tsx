@@ -1,6 +1,10 @@
 import { categoryService } from '../../services/categoryService'
 import type { Category } from '../../types/category'
+import { getApiErrorMessage } from '../../utils/getApiErrorMessage'
 import { useState } from 'react'
+
+const categoryDeleteErrorMessage =
+  'Unable to delete category. Please try again.'
 
 type DeleteCategoryConfirmModalProps = {
   category: Category
@@ -35,8 +39,8 @@ function DeleteCategoryConfirmModal({
     try {
       await categoryService.deleteCategory(category.id)
       onSuccess()
-    } catch {
-      setError('Could not delete this category. Please try again.')
+    } catch (caughtError) {
+      setError(getApiErrorMessage(caughtError, categoryDeleteErrorMessage))
     } finally {
       setIsDeleting(false)
     }

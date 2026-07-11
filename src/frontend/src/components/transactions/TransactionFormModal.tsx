@@ -14,6 +14,12 @@ import {
   type Transaction,
   type UpdateTransactionRequest,
 } from '../../types/transaction'
+import { getApiErrorMessage } from '../../utils/getApiErrorMessage'
+
+const categoriesLoadErrorMessage =
+  'Unable to load categories. Please try again.'
+const transactionSaveErrorMessage =
+  'Unable to save transaction. Please try again.'
 
 type TransactionFormModalProps = {
   isOpen: boolean
@@ -115,14 +121,16 @@ function TransactionFormModalContent({
         setCategories(loadedCategories)
         setCategoryError('')
       })
-      .catch(() => {
+      .catch((caughtError: unknown) => {
         if (!isActive) {
           return
         }
 
         setCategories([])
         setCategoryId('')
-        setCategoryError('Could not load categories. Please try again later.')
+        setCategoryError(
+          getApiErrorMessage(caughtError, categoriesLoadErrorMessage),
+        )
       })
       .finally(() => {
         if (!isActive) {
@@ -244,10 +252,8 @@ function TransactionFormModalContent({
 
       onSuccess()
       onClose()
-    } catch {
-      setError(
-        'Could not save transaction. Please check the details and try again.',
-      )
+    } catch (caughtError) {
+      setError(getApiErrorMessage(caughtError, transactionSaveErrorMessage))
     } finally {
       setIsSaving(false)
     }

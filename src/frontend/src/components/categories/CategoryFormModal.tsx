@@ -6,6 +6,9 @@ import {
   type CreateCategoryRequest,
   type UpdateCategoryRequest,
 } from '../../types/category'
+import { getApiErrorMessage } from '../../utils/getApiErrorMessage'
+
+const categorySaveErrorMessage = 'Unable to save category. Please try again.'
 
 type CategoryFormModalProps = {
   isOpen: boolean
@@ -81,8 +84,8 @@ function CategoryFormModal({
 
       onSuccess()
       onClose()
-    } catch {
-      setError('Could not save category. Please check the details and try again.')
+    } catch (caughtError) {
+      setError(getApiErrorMessage(caughtError, categorySaveErrorMessage))
     } finally {
       setIsSaving(false)
     }
