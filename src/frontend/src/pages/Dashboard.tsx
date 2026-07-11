@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type ChangeEvent,
+} from 'react'
 import CategoryFormModal from '../components/categories/CategoryFormModal'
 import CategorySummaryList from '../components/summary/CategorySummaryList'
 import SummaryCard from '../components/summary/SummaryCard'
@@ -17,16 +22,34 @@ const formatCurrency = (value: number): string =>
     style: 'currency',
   }).format(value)
 
-const getCurrentPeriod = (): { month: number; monthName: string; year: number } => {
-  const currentDate = new Date()
-  const month = currentDate.getMonth() + 1
-  const year = currentDate.getFullYear()
-  const monthName = new Intl.DateTimeFormat('en-US', {
-    month: 'long',
-  }).format(currentDate)
-
-  return { month, monthName, year }
+type MonthOption = {
+  label: string
+  value: number
 }
+
+const currentDate = new Date()
+const currentMonth = currentDate.getMonth() + 1
+const currentYear = currentDate.getFullYear()
+
+const monthOptions: MonthOption[] = [
+  { label: 'January', value: 1 },
+  { label: 'February', value: 2 },
+  { label: 'March', value: 3 },
+  { label: 'April', value: 4 },
+  { label: 'May', value: 5 },
+  { label: 'June', value: 6 },
+  { label: 'July', value: 7 },
+  { label: 'August', value: 8 },
+  { label: 'September', value: 9 },
+  { label: 'October', value: 10 },
+  { label: 'November', value: 11 },
+  { label: 'December', value: 12 },
+]
+
+const yearOptions: number[] = [currentYear - 1, currentYear, currentYear + 1]
+
+const selectClassName =
+  'mt-2 w-full rounded-2xl border border-[#D1D5DB] bg-white px-4 py-3 text-sm font-semibold text-[#374151] outline-none transition focus:border-[#3BAA72] focus:ring-4 focus:ring-[#EAF7F0] disabled:cursor-not-allowed disabled:bg-[#F1F5F2] disabled:text-[#6B7280]'
 
 function Dashboard() {
   const [summary, setSummary] = useState<MonthlySummary | null>(null)
@@ -43,7 +66,8 @@ function Dashboard() {
     useState<boolean>(false)
   const [isCategoryModalOpen, setIsCategoryModalOpen] =
     useState<boolean>(false)
-  const { month, monthName, year } = getCurrentPeriod()
+  const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth)
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear)
 
   const loadMonthlySummary = useCallback(async (): Promise<void> => {
     setLoading(true)
@@ -51,8 +75,8 @@ function Dashboard() {
 
     try {
       const monthlySummary = await summaryService.getMonthlySummary({
-        month,
-        year,
+        month: selectedMonth,
+        year: selectedYear,
       })
       setSummary(monthlySummary)
     } catch {
@@ -60,7 +84,7 @@ function Dashboard() {
     } finally {
       setLoading(false)
     }
-  }, [month, year])
+  }, [selectedMonth, selectedYear])
 
   const loadCategorySummary = useCallback(async (): Promise<void> => {
     setCategoryLoading(true)
@@ -68,8 +92,8 @@ function Dashboard() {
 
     try {
       const categoryParams: CategorySummaryParams = {
-        month,
-        year,
+        month: selectedMonth,
+        year: selectedYear,
       }
 
       if (selectedCategoryType !== undefined) {
@@ -87,7 +111,7 @@ function Dashboard() {
     } finally {
       setCategoryLoading(false)
     }
-  }, [month, selectedCategoryType, year])
+  }, [selectedCategoryType, selectedMonth, selectedYear])
 
   useEffect(() => {
     let isActive = true
@@ -133,6 +157,18 @@ function Dashboard() {
     setIsCategoryModalOpen(false)
   }
 
+  const handleMonthChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    setLoading(true)
+    setCategoryLoading(true)
+    setSelectedMonth(Number(event.target.value))
+  }
+
+  const handleYearChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    setLoading(true)
+    setCategoryLoading(true)
+    setSelectedYear(Number(event.target.value))
+  }
+
   const handleTransactionCreated = (): void => {
     void Promise.all([loadMonthlySummary(), loadCategorySummary()])
   }
@@ -140,6 +176,10 @@ function Dashboard() {
   const handleCategoryCreated = (): void => {
     void loadCategorySummary()
   }
+
+  const selectedMonthLabel =
+    monthOptions.find((monthOption) => monthOption.value === selectedMonth)
+      ?.label ?? 'Selected month'
 
   return (
     <>
@@ -160,14 +200,52 @@ function Dashboard() {
                 </p>
               </div>
 
-              <div className="flex w-full flex-col gap-3 sm:w-auto sm:min-w-60">
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:min-w-72">
                 <div className="rounded-2xl border border-[#E5E7EB] bg-white px-5 py-4 shadow-sm">
                   <p className="text-xs font-semibold uppercase tracking-normal text-[#6B7280]">
                     Current period
                   </p>
                   <p className="mt-1 text-xl font-bold text-[#1F2933]">
-                    {monthName} {year}
+                    {selectedMonthLabel} {selectedYear}
                   </p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                    <label className="block">
+                      <span className="text-sm font-semibold text-[#374151]">
+                        Month
+                      </span>
+                      <select
+                        className={selectClassName}
+                        onChange={handleMonthChange}
+                        value={selectedMonth}
+                      >
+                        {monthOptions.map((monthOption) => (
+                          <option
+                            key={monthOption.value}
+                            value={monthOption.value}
+                          >
+                            {monthOption.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="block">
+                      <span className="text-sm font-semibold text-[#374151]">
+                        Year
+                      </span>
+                      <select
+                        className={selectClassName}
+                        onChange={handleYearChange}
+                        value={selectedYear}
+                      >
+                        {yearOptions.map((yearOption) => (
+                          <option key={yearOption} value={yearOption}>
+                            {yearOption}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
