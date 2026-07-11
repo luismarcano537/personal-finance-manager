@@ -1,4 +1,5 @@
 import { type ChangeEvent, useEffect, useState } from 'react'
+import DeleteTransactionConfirmModal from '../components/transactions/DeleteTransactionConfirmModal'
 import TransactionFormModal from '../components/transactions/TransactionFormModal'
 import { categoryService } from '../services/categoryService'
 import { transactionService } from '../services/transactionService'
@@ -102,6 +103,12 @@ function Transactions() {
     useState<boolean>(false)
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null)
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<Transaction | null>(null)
+  const [isDeletingTransaction, setIsDeletingTransaction] =
+    useState<boolean>(false)
+  const [deleteTransactionError, setDeleteTransactionError] =
+    useState<string>('')
   const [refreshKey, setRefreshKey] = useState<number>(0)
 
   useEffect(() => {
@@ -237,6 +244,42 @@ function Transactions() {
   const handleTransactionSaved = (): void => {
     setIsLoading(true)
     setRefreshKey((currentRefreshKey) => currentRefreshKey + 1)
+  }
+
+  const handleOpenDeleteModal = (transaction: Transaction): void => {
+    setTransactionToDelete(transaction)
+    setDeleteTransactionError('')
+  }
+
+  const handleCloseDeleteModal = (): void => {
+    if (isDeletingTransaction) {
+      return
+    }
+
+    setTransactionToDelete(null)
+    setDeleteTransactionError('')
+  }
+
+  const handleConfirmDeleteTransaction = async (): Promise<void> => {
+    if (transactionToDelete === null || isDeletingTransaction) {
+      return
+    }
+
+    setIsDeletingTransaction(true)
+    setDeleteTransactionError('')
+
+    try {
+      await transactionService.deleteTransaction(transactionToDelete.id)
+      setTransactionToDelete(null)
+      setIsLoading(true)
+      setRefreshKey((currentRefreshKey) => currentRefreshKey + 1)
+    } catch {
+      setDeleteTransactionError(
+        'Could not delete this transaction. Please try again.',
+      )
+    } finally {
+      setIsDeletingTransaction(false)
+    }
   }
 
   const typeFilterValue: TypeFilterValue =
@@ -477,6 +520,13 @@ function Transactions() {
                         >
                           Edit
                         </button>
+                        <button
+                          className="rounded-2xl border border-[#DC2626]/25 bg-white px-4 py-2 text-sm font-semibold text-[#DC2626] transition hover:bg-[#FEF2F2] disabled:cursor-not-allowed disabled:opacity-60"
+                          onClick={() => handleOpenDeleteModal(transaction)}
+                          type="button"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </li>
                   )
@@ -492,6 +542,16 @@ function Transactions() {
         onClose={handleCloseTransactionModal}
         onSuccess={handleTransactionSaved}
         transaction={selectedTransaction}
+      />
+
+      <DeleteTransactionConfirmModal
+        error={deleteTransactionError}
+        formatCurrency={formatCurrency}
+        formatTransactionDate={formatTransactionDate}
+        isDeleting={isDeletingTransaction}
+        onCancel={handleCloseDeleteModal}
+        onConfirm={handleConfirmDeleteTransaction}
+        transaction={transactionToDelete}
       />
     </section>
   )
