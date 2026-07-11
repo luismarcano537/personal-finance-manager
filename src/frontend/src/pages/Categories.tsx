@@ -3,6 +3,10 @@ import DeleteCategoryConfirmModal from '../components/categories/DeleteCategoryC
 import CategoryFormModal from '../components/categories/CategoryFormModal'
 import { categoryService } from '../services/categoryService'
 import { CategoryType, type Category } from '../types/category'
+import { getApiErrorMessage } from '../utils/getApiErrorMessage'
+
+const categoriesLoadErrorMessage =
+  'Unable to load categories. Please try again.'
 
 type CategoryTypeView = {
   label: string
@@ -43,8 +47,8 @@ function Categories() {
       const loadedCategories = await categoryService.getCategories()
       setCategories(loadedCategories)
       setError('')
-    } catch {
-      setError('Could not load categories. Please try again later.')
+    } catch (caughtError) {
+      setError(getApiErrorMessage(caughtError, categoriesLoadErrorMessage))
     } finally {
       setIsLoading(false)
     }
@@ -63,12 +67,12 @@ function Categories() {
         setCategories(loadedCategories)
         setError('')
       })
-      .catch(() => {
+      .catch((caughtError: unknown) => {
         if (!isActive) {
           return
         }
 
-        setError('Could not load categories. Please try again later.')
+        setError(getApiErrorMessage(caughtError, categoriesLoadErrorMessage))
       })
       .finally(() => {
         if (!isActive) {
