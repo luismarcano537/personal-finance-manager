@@ -447,12 +447,21 @@ body {
     0 0 0 1px color-mix(in srgb, var(--color-brand-primary) 4%, transparent);
 }
 
-.login-panel-enter {
-  animation: login-panel-enter 680ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.auth-shell {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.login-form-enter {
-  animation: login-form-enter 680ms 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.auth-visual-panel,
+.auth-form-panel {
+  min-width: 0;
+}
+
+.auth-panel-content {
+  animation: auth-mobile-panel-enter 640ms 90ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-form-content {
+  animation: auth-mobile-panel-enter 640ms 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes login-shell-enter {
@@ -467,34 +476,88 @@ body {
   }
 }
 
-@keyframes login-panel-enter {
+@keyframes auth-mobile-panel-enter {
   from {
     opacity: 0;
-    transform: translateX(-14px);
+    transform: translateY(14px) scale(0.99);
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes login-form-enter {
+@keyframes auth-panel-from-left {
   from {
     opacity: 0;
-    transform: translateX(14px);
+    transform: translateX(-22px) scale(0.99);
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes auth-panel-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(22px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@media (min-width: 1024px) {
+  .auth-shell {
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  }
+
+  .auth-shell[data-mode='login'] .auth-visual-panel {
+    order: 0;
+    border-right: 1px solid var(--color-brand-border);
+  }
+
+  .auth-shell[data-mode='login'] .auth-form-panel {
+    order: 1;
+  }
+
+  .auth-shell[data-mode='register'] {
+    grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+  }
+
+  .auth-shell[data-mode='register'] .auth-form-panel {
+    order: 0;
+  }
+
+  .auth-shell[data-mode='register'] .auth-visual-panel {
+    order: 1;
+    border-left: 1px solid var(--color-brand-border);
+  }
+
+  .auth-visual-panel {
+    border-bottom: 0;
+  }
+
+  .auth-shell[data-mode='login'] .auth-panel-content,
+  .auth-shell[data-mode='register'] .auth-form-content {
+    animation-name: auth-panel-from-left;
+  }
+
+  .auth-shell[data-mode='login'] .auth-form-content,
+  .auth-shell[data-mode='register'] .auth-panel-content {
+    animation-name: auth-panel-from-right;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .login-shell,
-  .login-panel-enter,
-  .login-form-enter {
+  .auth-panel-content,
+  .auth-form-content {
     animation: none;
   }
 }
