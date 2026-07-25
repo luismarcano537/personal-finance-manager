@@ -509,7 +509,7 @@ function LandingPage() {
             </Link>
             <Link
               className="inline-flex min-h-10 items-center rounded-xl bg-brand-primary px-4 text-sm font-bold text-white transition hover:brightness-90"
-              to="/login"
+              to="/register"
             >
               Get started
             </Link>
@@ -518,7 +518,7 @@ function LandingPage() {
           <div className="flex shrink-0 items-center gap-2 md:hidden">
             <Link
               className="inline-flex min-h-10 items-center rounded-xl bg-brand-primary px-3 text-xs font-bold text-white transition hover:brightness-90 min-[360px]:text-sm"
-              to="/login"
+              to="/register"
             >
               Get started
             </Link>
@@ -557,7 +557,7 @@ function LandingPage() {
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3 border-t border-brand-border pt-4">
                 <Link className={secondaryCta} onClick={() => setIsMobileMenuOpen(false)} to="/login">Sign in</Link>
-                <Link className={primaryCta} onClick={() => setIsMobileMenuOpen(false)} to="/login">Get started</Link>
+                <Link className={primaryCta} onClick={() => setIsMobileMenuOpen(false)} to="/register">Get started</Link>
               </div>
             </nav>
           </div>
@@ -585,7 +585,7 @@ function LandingPage() {
             </Reveal>
             <Reveal delay={270} variant="scale-up">
               <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                <Link className={primaryCta} to="/login">Get started</Link>
+                <Link className={primaryCta} to="/register">Get started</Link>
                 <Link className={secondaryCta} to="/login">Sign in</Link>
               </div>
             </Reveal>
@@ -734,7 +734,7 @@ function LandingPage() {
               </Reveal>
               <Reveal className="relative" delay={220} variant="fade-up">
                 <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                  <Link className={primaryCta} to="/login">Get started</Link>
+                  <Link className={primaryCta} to="/register">Get started</Link>
                   <Link className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/35 px-6 py-3 text-sm font-bold text-white transition hover:border-white/60 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white" to="/login">Sign in</Link>
                 </div>
               </Reveal>

@@ -5,7 +5,7 @@ import AuthenticatedLayout from '../layouts/AuthenticatedLayout'
 import Categories from '../pages/Categories'
 import Dashboard from '../pages/Dashboard'
 import LandingPage from '../pages/LandingPage'
-import Login from '../pages/Login'
+import AuthPage from '../pages/AuthPage'
 import NotFound from '../pages/NotFound'
 import Transactions from '../pages/Transactions'
 import ProtectedRoute from './ProtectedRoute'
@@ -71,7 +71,15 @@ function AppRoutes() {
           path="/login"
           element={
             <PublicRoute>
-              <Login />
+              <AuthPage key="login" />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <AuthPage key="register" />
             </PublicRoute>
           }
         />
