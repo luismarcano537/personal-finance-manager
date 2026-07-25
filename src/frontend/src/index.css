@@ -30,6 +30,14 @@
 :root {
   --landing-contrast-surface: #1F2933;
   --landing-device-frame: #1F2933;
+  --landing-hero-green: rgba(59, 170, 114, 0.14);
+  --landing-hero-gold: rgba(207, 159, 87, 0.13);
+  --landing-benefits-start: #EAF7F0;
+  --landing-benefits-end: #F7FAF7;
+  --landing-cta-start: #183D2A;
+  --landing-cta-end: #1F2933;
+  --landing-card-shadow: rgba(31, 41, 51, 0.07);
+  --landing-phone-shadow: rgba(31, 41, 51, 0.2);
   color-scheme: light;
 }
 
@@ -57,6 +65,14 @@
 
   --landing-contrast-surface: #111A15;
   --landing-device-frame: #070B09;
+  --landing-hero-green: rgba(59, 170, 114, 0.16);
+  --landing-hero-gold: rgba(217, 177, 111, 0.09);
+  --landing-benefits-start: #122A1D;
+  --landing-benefits-end: #101A14;
+  --landing-cta-start: #173825;
+  --landing-cta-end: #111A15;
+  --landing-card-shadow: rgba(0, 0, 0, 0.24);
+  --landing-phone-shadow: rgba(0, 0, 0, 0.42);
   color-scheme: dark;
 }
 
@@ -73,4 +89,547 @@ body,
 
 body {
   transition: background-color 300ms ease, color 300ms ease;
+}
+/* Landing-specific presentation, scoped through reusable classes. */
+.landing-hero {
+  background-color: var(--color-brand-background);
+  background-image:
+    radial-gradient(ellipse 72% 46% at 50% -8%, var(--landing-hero-green), transparent 72%),
+    radial-gradient(ellipse 42% 34% at 92% 18%, var(--landing-hero-gold), transparent 76%);
+}
+
+.landing-benefits {
+  background: linear-gradient(135deg, var(--landing-benefits-start), var(--landing-benefits-end));
+}
+
+.landing-cta-band {
+  background:
+    radial-gradient(ellipse 46% 70% at 50% 100%, var(--landing-hero-green), transparent 76%),
+    var(--color-brand-background);
+}
+
+.landing-final-cta {
+  background:
+    radial-gradient(ellipse 52% 120% at 100% 0%, rgba(207, 159, 87, 0.16), transparent 72%),
+    linear-gradient(135deg, var(--landing-cta-start), var(--landing-cta-end));
+}
+
+.landing-mockup-glow {
+  background: radial-gradient(ellipse at center, var(--landing-hero-green), transparent 68%);
+  filter: blur(18px);
+}
+
+.landing-phone-main {
+  box-shadow: 0 32px 72px var(--landing-phone-shadow), 0 0 0 1px rgba(59, 170, 114, 0.08);
+}
+
+.landing-phone-side {
+  box-shadow: 0 24px 54px var(--landing-phone-shadow);
+  opacity: 0.94;
+}
+
+.landing-floating-label {
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--color-brand-surface) 88%, transparent);
+  padding: 0.5rem 0.7rem;
+  color: var(--color-brand-text);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  box-shadow: 0 12px 28px var(--landing-card-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.landing-elevated-card,
+.landing-check-card {
+  box-shadow: 0 18px 46px var(--landing-card-shadow);
+  transition: border-color 260ms ease, box-shadow 260ms ease, transform 260ms ease;
+}
+
+.landing-navbar {
+  transition:
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.landing-navbar[data-scrolled] {
+  border-color: var(--color-brand-border-strong);
+  background-color: color-mix(in srgb, var(--color-brand-surface) 94%, transparent);
+  box-shadow: 0 12px 34px var(--landing-card-shadow);
+}
+
+.landing-scroll-progress {
+  background-color: color-mix(in srgb, var(--color-brand-border) 50%, transparent);
+}
+
+.landing-section-depth {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.landing-section-depth::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  opacity: 0.12;
+  transform: scale(0.96);
+  transition:
+    opacity 900ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-depth-green::before {
+  background: radial-gradient(ellipse 48% 62% at 100% 16%, var(--landing-hero-green), transparent 75%);
+}
+
+.landing-depth-gold::before {
+  background: radial-gradient(ellipse 44% 56% at 0% 68%, var(--landing-hero-gold), transparent 76%);
+}
+
+.landing-section-depth:has(.landing-reveal-visible)::before {
+  opacity: 0.52;
+  transform: scale(1);
+}
+
+.landing-parallax-stage {
+  --landing-parallax-y: 0px;
+  transform: translate3d(0, var(--landing-parallax-y), 0);
+  will-change: transform;
+}
+
+.landing-hero-mockups .landing-hero-phone-main,
+.landing-hero-mockups .landing-hero-phone-left,
+.landing-hero-mockups .landing-hero-phone-right,
+.landing-hero-mockups .landing-hero-label {
+  opacity: 0;
+  transition:
+    opacity 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    translate 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    scale 760ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-hero-mockups .landing-hero-phone-main {
+  translate: 0 44px;
+  scale: 0.93;
+}
+
+.landing-hero-mockups .landing-hero-phone-left {
+  translate: -22px 38px;
+  scale: 0.96;
+}
+
+.landing-hero-mockups .landing-hero-phone-right {
+  translate: 22px 38px;
+  scale: 0.96;
+}
+
+.landing-hero-mockups .landing-hero-label {
+  translate: 0 12px;
+  scale: 0.96;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-phone-main,
+.landing-hero-mockups.landing-reveal-visible .landing-hero-phone-left,
+.landing-hero-mockups.landing-reveal-visible .landing-hero-phone-right,
+.landing-hero-mockups.landing-reveal-visible .landing-hero-label {
+  translate: 0 0;
+  scale: 1;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-phone-main {
+  opacity: 1;
+  transition-delay: 60ms;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-phone-left {
+  opacity: 0.94;
+  transition-delay: 150ms;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-phone-right {
+  opacity: 0.94;
+  transition-delay: 220ms;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-label-1 {
+  opacity: 1;
+  transition-delay: 300ms;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-label-2 {
+  opacity: 1;
+  transition-delay: 370ms;
+}
+
+.landing-hero-mockups.landing-reveal-visible .landing-hero-label-3 {
+  opacity: 1;
+  transition-delay: 440ms;
+}
+
+.landing-cta-glow {
+  background: radial-gradient(ellipse 54% 86% at 50% 55%, rgba(59, 170, 114, 0.22), transparent 72%);
+  opacity: 0.24;
+  transform: scale(0.94);
+  transition: opacity 900ms ease, transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-cta-reveal .landing-final-cta {
+  transition: box-shadow 900ms ease;
+}
+
+.landing-cta-reveal.landing-reveal-visible .landing-cta-glow {
+  opacity: 0.82;
+  transform: scale(1);
+}
+
+.landing-cta-reveal.landing-reveal-visible .landing-final-cta {
+  box-shadow: 0 34px 88px rgba(20, 70, 42, 0.28);
+}
+
+.landing-reveal {
+  opacity: 0;
+  filter: blur(0);
+  transition:
+    opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 720ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.landing-reveal-fade-up {
+  transform: translate3d(0, 28px, 0);
+}
+
+.landing-reveal-fade-left {
+  transform: translate3d(-36px, 0, 0);
+}
+
+.landing-reveal-fade-right {
+  transform: translate3d(36px, 0, 0);
+}
+
+.landing-reveal-scale-up {
+  transform: translate3d(0, 16px, 0) scale(0.965);
+}
+
+.landing-reveal-blur-in {
+  filter: blur(5px);
+  transform: translate3d(0, 12px, 0) scale(0.985);
+}
+
+.landing-reveal-visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
+  will-change: auto;
+}
+
+@media (hover: hover) {
+  .landing-elevated-card:hover,
+  .landing-check-card:hover {
+    border-color: color-mix(in srgb, var(--color-brand-primary) 38%, var(--color-brand-border));
+    box-shadow: 0 24px 58px var(--landing-card-shadow);
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 1023px) {
+  .landing-mobile-flow .landing-reveal-fade-left:not(.landing-reveal-visible),
+  .landing-mobile-flow .landing-reveal-fade-right:not(.landing-reveal-visible) {
+    transform: translate3d(0, 22px, 0);
+  }
+}
+@media (max-width: 639px) {
+  .landing-reveal {
+    transition-duration: 620ms;
+  }
+
+  .landing-reveal-fade-left:not(.landing-reveal-visible) {
+    transform: translate3d(-18px, 0, 0);
+  }
+
+  .landing-reveal-fade-right:not(.landing-reveal-visible) {
+    transform: translate3d(18px, 0, 0);
+  }
+
+  .landing-hero-mockups .landing-hero-phone-left {
+    translate: -12px 26px;
+  }
+
+  .landing-hero-mockups .landing-hero-phone-right {
+    translate: 12px 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-navbar,
+  .landing-section-depth::before,
+  .landing-reveal,
+  .landing-reveal-visible,
+  .landing-elevated-card,
+  .landing-check-card,
+  .landing-hero-mockups .landing-hero-phone-main,
+  .landing-hero-mockups .landing-hero-phone-left,
+  .landing-hero-mockups .landing-hero-phone-right,
+  .landing-hero-mockups .landing-hero-label,
+  .landing-cta-glow,
+  .landing-cta-reveal .landing-final-cta {
+    transition: none;
+  }
+
+  .landing-reveal,
+  .landing-reveal-visible,
+  .landing-hero-mockups .landing-hero-phone-main,
+  .landing-hero-mockups .landing-hero-phone-left,
+  .landing-hero-mockups .landing-hero-phone-right,
+  .landing-hero-mockups .landing-hero-label {
+    opacity: 1;
+    filter: none;
+    translate: 0 0;
+    scale: 1;
+    transform: none;
+  }
+
+  .landing-parallax-stage {
+    transform: none;
+    will-change: auto;
+  }
+
+  .landing-cta-glow {
+    opacity: 0.55;
+    transform: none;
+  }
+
+  .landing-section-depth::before,
+  .landing-section-depth:has(.landing-reveal-visible)::before {
+    opacity: 0.42;
+    transform: none;
+  }
+}
+/* Public sign-in experience, using the same theme variables as the landing. */
+.login-page {
+  background-color: var(--color-brand-background);
+  background-image:
+    radial-gradient(ellipse 58% 42% at 6% 8%, var(--landing-hero-green), transparent 72%),
+    radial-gradient(ellipse 42% 34% at 96% 88%, var(--landing-hero-gold), transparent 76%);
+}
+
+.login-shell {
+  isolation: isolate;
+  border-color: color-mix(in srgb, var(--color-brand-border-strong) 72%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-brand-surface) 78%, transparent) inset,
+    0 28px 72px var(--landing-card-shadow),
+    0 48px 120px color-mix(in srgb, var(--landing-card-shadow) 76%, transparent);
+  animation: login-shell-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-visual {
+  background:
+    radial-gradient(ellipse 58% 48% at 12% 0%, var(--landing-hero-gold), transparent 74%),
+    radial-gradient(ellipse 70% 60% at 100% 100%, var(--landing-hero-green), transparent 76%),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-brand-primary-soft) 72%, var(--color-brand-surface)),
+      var(--color-brand-surface)
+    );
+}
+
+.login-focus-card {
+  box-shadow:
+    0 18px 46px var(--landing-card-shadow),
+    0 0 0 1px color-mix(in srgb, var(--color-brand-primary) 4%, transparent);
+}
+
+.login-panel-enter {
+  animation: login-panel-enter 680ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-form-enter {
+  animation: login-form-enter 680ms 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes login-shell-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes login-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes login-form-enter {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-shell,
+  .login-panel-enter,
+  .login-form-enter {
+    animation: none;
+  }
+}
+/* Light-mode depth for the public sign-in experience. */
+:root:not([data-theme='dark']) .login-page {
+  position: relative;
+  isolation: isolate;
+  background-color: color-mix(in srgb, var(--color-brand-background) 88%, var(--color-brand-primary-soft));
+  background-image:
+    radial-gradient(
+      ellipse 68% 52% at 4% 10%,
+      color-mix(in srgb, var(--color-brand-primary) 11%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 52% 42% at 98% 92%,
+      color-mix(in srgb, var(--color-brand-gold) 10%, transparent),
+      transparent 74%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-brand-background) 88%, var(--color-brand-primary-soft)),
+      color-mix(in srgb, var(--color-brand-background) 90%, var(--color-brand-gold-soft))
+    );
+}
+
+:root:not([data-theme='dark']) .login-page::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 48% 38% at 28% 48%,
+      color-mix(in srgb, var(--color-brand-primary) 8%, transparent),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 38% 32% at 76% 62%,
+      color-mix(in srgb, var(--color-brand-gold) 7%, transparent),
+      transparent 78%
+    );
+}
+
+:root:not([data-theme='dark']) .login-card-stage::before {
+  position: absolute;
+  z-index: 0;
+  inset: 8% 2% 5%;
+  border-radius: 3rem;
+  content: '';
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 56% 76% at 22% 48%, var(--landing-hero-green), transparent 74%),
+    radial-gradient(ellipse 44% 66% at 82% 58%, var(--landing-hero-gold), transparent 76%);
+  filter: blur(34px);
+  opacity: 0.84;
+}
+
+:root:not([data-theme='dark']) .login-header {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-brand-primary) 7%, var(--color-brand-border));
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-brand-surface) 42%, transparent),
+    color-mix(in srgb, var(--color-brand-gold-soft) 18%, transparent),
+    transparent 82%
+  );
+}
+
+:root:not([data-theme='dark']) .login-shell {
+  border-color: color-mix(in srgb, var(--color-brand-primary) 13%, var(--color-brand-border));
+  background-color: color-mix(in srgb, var(--color-brand-surface) 94%, var(--color-brand-primary-soft));
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-brand-surface) 88%, transparent) inset,
+    0 24px 58px color-mix(in srgb, var(--color-brand-text-strong) 8%, transparent),
+    0 48px 120px color-mix(in srgb, var(--color-brand-text-strong) 9%, transparent),
+    -28px 14px 90px color-mix(in srgb, var(--color-brand-primary) 7%, transparent),
+    32px 22px 100px color-mix(in srgb, var(--color-brand-gold) 6%, transparent);
+}
+
+:root:not([data-theme='dark']) .login-visual {
+  border-color: color-mix(in srgb, var(--color-brand-primary) 11%, var(--color-brand-border));
+  background:
+    radial-gradient(ellipse 64% 50% at 4% 0%, var(--landing-hero-gold), transparent 74%),
+    radial-gradient(ellipse 76% 66% at 100% 100%, var(--landing-hero-green), transparent 76%),
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--color-brand-primary-soft) 82%, var(--color-brand-surface)),
+      color-mix(in srgb, var(--color-brand-surface) 88%, var(--color-brand-gold-soft))
+    );
+  box-shadow: 0 -1px 0 color-mix(in srgb, var(--color-brand-surface) 70%, transparent) inset;
+}
+
+:root:not([data-theme='dark']) .login-focus-card {
+  border-color: color-mix(in srgb, var(--color-brand-primary) 13%, var(--color-brand-border));
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-brand-surface) 92%, var(--color-brand-primary-soft)),
+      color-mix(in srgb, var(--color-brand-surface) 94%, var(--color-brand-gold-soft))
+    );
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-brand-surface) 92%, transparent) inset,
+    0 18px 42px color-mix(in srgb, var(--color-brand-text-strong) 9%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-brand-primary) 5%, transparent);
+}
+
+:root:not([data-theme='dark']) .login-form-panel {
+  background:
+    radial-gradient(
+      ellipse 62% 44% at 100% 100%,
+      color-mix(in srgb, var(--color-brand-gold) 7%, transparent),
+      transparent 76%
+    ),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--color-brand-surface) 90%, var(--color-brand-gold-soft)),
+      color-mix(in srgb, var(--color-brand-background) 38%, var(--color-brand-surface))
+    );
+}
+
+:root:not([data-theme='dark']) .login-input {
+  border-color: color-mix(in srgb, var(--color-brand-primary) 9%, var(--color-brand-border));
+  background-color: color-mix(in srgb, var(--color-brand-surface) 68%, var(--color-brand-background));
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-brand-surface) 88%, transparent) inset,
+    0 5px 14px color-mix(in srgb, var(--color-brand-text-strong) 4%, transparent);
+}
+
+:root:not([data-theme='dark']) .login-input:focus {
+  background-color: color-mix(in srgb, var(--color-brand-surface) 92%, var(--color-brand-primary-soft));
+}
+
+@media (min-width: 1024px) {
+  :root:not([data-theme='dark']) .login-visual {
+    box-shadow: -1px 0 0 color-mix(in srgb, var(--color-brand-surface) 72%, transparent) inset;
+  }
 }
