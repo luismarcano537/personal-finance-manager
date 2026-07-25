@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import BrandLogo from '../components/ui/BrandLogo'
+import ThemeToggle from '../components/ui/ThemeToggle'
 import { useAuth } from '../hooks/useAuth'
 
 type AuthenticatedLayoutProps = {
@@ -49,14 +51,7 @@ function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
       <div className="flex min-h-screen flex-col lg:flex-row">
         <aside className="border-b border-brand-border bg-brand-surface px-4 py-4 shadow-sm lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-72 lg:flex-col lg:border-b-0 lg:border-r lg:px-5 lg:py-6">
           <div className="flex items-center justify-between gap-4 lg:block">
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-normal text-brand-primary-dark">
-                Prosperity Finance
-              </p>
-              <h1 className="mt-1 truncate text-lg font-bold text-brand-text-strong sm:text-xl">
-                Finance Manager
-              </h1>
-            </div>
+            <BrandLogo className="max-w-[13rem] [&_.brand-logo-tagline]:hidden sm:[&_.brand-logo-tagline]:block" showTagline />
 
             <button
               className="inline-flex shrink-0 items-center justify-center rounded-xl border border-brand-border-strong bg-brand-surface px-3 py-2 text-sm font-semibold text-brand-text transition hover:border-brand-primary hover:bg-brand-primary-soft hover:text-brand-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-white lg:hidden"
@@ -126,6 +121,8 @@ function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
                   {currentNavigationItem.label}
                 </h2>
               </div>
+
+              <ThemeToggle showLabel={false} />
 
               <div className="hidden min-w-0 text-right sm:block">
                 <p className="text-sm text-brand-text-muted">Signed in as</p>

@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import AuthenticatedLayout from '../layouts/AuthenticatedLayout'
 import Categories from '../pages/Categories'
 import Dashboard from '../pages/Dashboard'
+import LandingPage from '../pages/LandingPage'
 import Login from '../pages/Login'
 import NotFound from '../pages/NotFound'
 import Transactions from '../pages/Transactions'
@@ -35,7 +36,7 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<LandingPage />} />
         <Route
           path="/dashboard"
           element={

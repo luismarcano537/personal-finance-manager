@@ -1,11 +1,14 @@
 import AppRoutes from './routes/AppRoutes'
 import { AuthProvider } from './contexts/AuthProvider'
+import { ThemeProvider } from './contexts/ThemeProvider'
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 
