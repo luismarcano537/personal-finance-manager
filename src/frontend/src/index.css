@@ -38,6 +38,7 @@
   --landing-cta-end: #1F2933;
   --landing-card-shadow: rgba(31, 41, 51, 0.07);
   --landing-phone-shadow: rgba(31, 41, 51, 0.2);
+  --auth-modal-overlay: rgba(14, 21, 17, 0.38);
   color-scheme: light;
 }
 
@@ -73,6 +74,7 @@
   --landing-cta-end: #111A15;
   --landing-card-shadow: rgba(0, 0, 0, 0.24);
   --landing-phone-shadow: rgba(0, 0, 0, 0.42);
+  --auth-modal-overlay: rgba(3, 7, 5, 0.58);
   color-scheme: dark;
 }
 
@@ -464,10 +466,43 @@ body {
   animation: auth-mobile-panel-enter 640ms 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.register-feedback-overlay {
+  background-color: var(--auth-modal-overlay);
+  backdrop-filter: blur(9px) saturate(0.88);
+  -webkit-backdrop-filter: blur(9px) saturate(0.88);
+  animation: register-feedback-overlay-enter 220ms ease-out both;
+}
+
+.register-feedback-card {
+  animation: register-feedback-card-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @keyframes login-shell-enter {
   from {
     opacity: 0;
     transform: translateY(14px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes register-feedback-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes register-feedback-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
   }
 
   to {
@@ -557,7 +592,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .login-shell,
   .auth-panel-content,
-  .auth-form-content {
+  .auth-form-content,
+  .register-feedback-overlay,
+  .register-feedback-card {
     animation: none;
   }
 }

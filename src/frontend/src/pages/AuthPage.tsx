@@ -1,5 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { useCallback, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import RegisterFeedbackModal, {
+  type RegisterFeedbackType,
+} from '../components/auth/RegisterFeedbackModal'
 import BrandLogo from '../components/ui/BrandLogo'
 import ThemeToggle from '../components/ui/ThemeToggle'
 import { useAuth } from '../hooks/useAuth'
@@ -8,8 +11,10 @@ import { getApiErrorMessage } from '../utils/getApiErrorMessage'
 
 type AuthMode = 'login' | 'register'
 
-type AuthLocationState = {
-  registrationSuccess?: string
+type RegisterFeedback = {
+  type: RegisterFeedbackType
+  title: string
+  message: string
 }
 
 type VisualContent = {
@@ -26,9 +31,9 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const loginErrorMessage =
   'Unable to sign in. Please check your email and password.'
 const registerErrorMessage =
-  'Unable to create your account. Please review your information and try again.'
+  'Please review your information and try again.'
 const registrationSuccessMessage =
-  'Your account was created successfully. You can now sign in.'
+  'Your Stewardly account was created successfully. You can now sign in and start organizing your financial life.'
 const inputClassName =
   'login-input mt-2 min-h-12 w-full rounded-lg border border-brand-border bg-brand-background/70 px-4 py-3 text-sm text-brand-text-strong outline-none transition placeholder:text-brand-text-muted focus:border-brand-primary focus:bg-brand-surface focus:ring-2 focus:ring-brand-primary/20'
 
@@ -121,17 +126,31 @@ function AuthPage() {
   const mode: AuthMode =
     location.pathname === '/register' ? 'register' : 'login'
   const isRegister = mode === 'register'
-  const locationState = location.state as AuthLocationState | null
-  const registrationSuccess = isRegister
-    ? ''
-    : locationState?.registrationSuccess ?? ''
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [isSigningIn, setIsSigningIn] = useState(false)
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [registerFeedback, setRegisterFeedback] =
+    useState<RegisterFeedback | null>(null)
+  const isSubmitting = isRegister ? isRegistering : isSigningIn
+
+  const closeRegisterFeedback = useCallback(() => {
+    setRegisterFeedback(null)
+  }, [])
+
+  const handleRegisterFeedbackAction = useCallback(() => {
+    if (registerFeedback?.type === 'success') {
+      setRegisterFeedback(null)
+      navigate('/login', { replace: true })
+      return
+    }
+
+    setRegisterFeedback(null)
+  }, [navigate, registerFeedback?.type])
 
   function validateForm(): string | null {
     if (isRegister && !name.trim()) {
@@ -167,16 +186,34 @@ function AuthPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (isSubmitting) {
+      return
+    }
+
     setError('')
 
     const validationMessage = validateForm()
 
     if (validationMessage) {
-      setError(validationMessage)
+      if (isRegister) {
+        setRegisterFeedback({
+          type: 'error',
+          title: 'We could not create your account',
+          message: validationMessage,
+        })
+      } else {
+        setError(validationMessage)
+      }
+
       return
     }
 
-    setLoading(true)
+    if (isRegister) {
+      setIsRegistering(true)
+    } else {
+      setIsSigningIn(true)
+    }
 
     try {
       if (isRegister) {
@@ -185,9 +222,10 @@ function AuthPage() {
           email: email.trim(),
           password,
         })
-        navigate('/login', {
-          replace: true,
-          state: { registrationSuccess: registrationSuccessMessage },
+        setRegisterFeedback({
+          type: 'success',
+          title: 'Account created successfully',
+          message: registrationSuccessMessage,
         })
         return
       }
@@ -195,14 +233,26 @@ function AuthPage() {
       await login({ email: email.trim(), password })
       navigate('/dashboard', { replace: true })
     } catch (caughtError) {
-      setError(
-        getApiErrorMessage(
-          caughtError,
-          isRegister ? registerErrorMessage : loginErrorMessage,
-        ),
+      const message = getApiErrorMessage(
+        caughtError,
+        isRegister ? registerErrorMessage : loginErrorMessage,
       )
+
+      if (isRegister) {
+        setRegisterFeedback({
+          type: 'error',
+          title: 'We could not create your account',
+          message,
+        })
+      } else {
+        setError(message)
+      }
     } finally {
-      setLoading(false)
+      if (isRegister) {
+        setIsRegistering(false)
+      } else {
+        setIsSigningIn(false)
+      }
     }
   }
 
@@ -349,18 +399,6 @@ function AuthPage() {
                     </div>
                   ) : null}
 
-                  {registrationSuccess ? (
-                    <div
-                      aria-live="polite"
-                      className="rounded-lg border border-brand-primary/30 bg-brand-primary-soft px-4 py-3"
-                      role="status"
-                    >
-                      <p className="text-sm font-semibold text-brand-primary-dark">
-                        {registrationSuccess}
-                      </p>
-                    </div>
-                  ) : null}
-
                   {error ? (
                     <div
                       aria-live="polite"
@@ -375,10 +413,10 @@ function AuthPage() {
 
                   <button
                     className="min-h-12 w-full rounded-lg bg-brand-primary px-4 py-3 text-sm font-bold text-white shadow-[0_12px_30px_rgba(59,170,114,0.24)] transition hover:bg-brand-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-brand-surface disabled:cursor-not-allowed disabled:bg-brand-border-strong disabled:text-brand-text-muted disabled:shadow-none"
-                    disabled={loading}
+                    disabled={isSubmitting}
                     type="submit"
                   >
-                    {loading
+                    {isSubmitting
                       ? isRegister
                         ? 'Creating account...'
                         : 'Signing in...'
@@ -433,6 +471,20 @@ function AuthPage() {
           </nav>
         </footer>
       </div>
+
+      {registerFeedback ? (
+        <RegisterFeedbackModal
+          isOpen
+          message={registerFeedback.message}
+          onClose={closeRegisterFeedback}
+          onPrimaryAction={handleRegisterFeedbackAction}
+          primaryActionLabel={
+            registerFeedback.type === 'success' ? 'Sign in' : 'Try again'
+          }
+          title={registerFeedback.title}
+          type={registerFeedback.type}
+        />
+      ) : null}
     </main>
   )
 }
