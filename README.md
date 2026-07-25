@@ -1,39 +1,221 @@
 # Personal Finance Manager
 
-A portfolio-focused personal finance application for securely managing income, expenses, categories, and financial summaries. The ASP.NET Core backend MVP is complete; the frontend is planned and has not been implemented yet.
+Personal Finance Manager is a personal portfolio project for managing income, expenses, categories, and monthly financial summaries.
+
+The project is split into a layered ASP.NET Core backend and a React frontend. It is intended for local development and portfolio demonstration; it is not currently deployed to production.
 
 ## Current Status
 
-**Backend MVP: implemented**
+Status: **In development**
 
-The API supports authenticated financial data management, PostgreSQL persistence, consistent error responses, and interactive Swagger documentation. Frontend development is a future phase.
-
-## Main Features
-
-- User registration and JWT login
-- Authenticated user profile endpoint
-- Category CRUD
-- Transaction CRUD with filtering
-- Monthly income, expense, balance, and transaction summaries
-- Monthly totals and transaction counts grouped by category
-- Global API error handling
-- Swagger / OpenAPI documentation
-- User-level data isolation
+| Area | Status |
+| --- | --- |
+| Backend MVP | Completed |
+| Frontend MVP | In progress |
+| Authentication | Completed |
+| Categories | Completed |
+| Transactions | Completed |
+| Dashboard | In progress / polished |
+| Deployment | Planned |
 
 ## Tech Stack
 
-- .NET 10 and ASP.NET Core Web API
+### Backend
+
+- .NET / ASP.NET Core Web API
 - Entity Framework Core
 - PostgreSQL 16
-- Docker and Docker Compose
+- Docker Compose
 - JWT Bearer authentication
 - Swagger / OpenAPI
+- Global error handling
+
+### Frontend
+
+- React
+- Vite
+- TypeScript
+- Tailwind CSS v4
+- `@tailwindcss/vite`
+- React Router
+- Axios
+- JWT stored in `localStorage`
+- Protected routes
+- Centralized design tokens in Tailwind using the Light Prosperity Finance visual identity
+
+## Features
+
+- User registration
+- Login and logout
+- JWT-based authentication
+- Protected dashboard route
+- Monthly dashboard summary
+- Category-based dashboard summary
+- Month and year selector on the dashboard
+- Dashboard quick actions to create transactions and categories
+- Category CRUD
+- Transaction CRUD
+- Transaction filters by month, year, type, and category
+- Friendly frontend error handling
+- Internal navigation with active states
+- Swagger documentation for backend endpoints
+
+## Backend Setup
+
+Prerequisites:
+
+- .NET SDK compatible with the backend project
+- Docker Desktop or Docker Engine with Compose
+- EF Core CLI, if database migrations need to be applied:
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+From the repository root, start PostgreSQL:
+
+```bash
+docker compose up -d postgres
+```
+
+The local database is configured in `docker-compose.yml`:
+
+```text
+Host port: 5433
+Container port: 5432
+Database: personal_finance
+User: postgres
+Password: postgres
+```
+
+Apply migrations if the local database has not been created yet:
+
+```bash
+cd src/backend
+dotnet ef database update --project PersonalFinance.Infrastructure --startup-project PersonalFinance.Api
+```
+
+Then run the API from `src/backend`:
+
+```bash
+dotnet run --project PersonalFinance.Api
+```
+
+The backend runs locally at:
+
+```text
+http://localhost:5174
+https://localhost:7240
+```
+
+Swagger is available in development at:
+
+```text
+http://localhost:5174/swagger
+https://localhost:7240/swagger
+```
+
+## Frontend Setup
+
+Prerequisites:
+
+- Node.js
+- npm
+- Backend API running locally
+
+From the repository root:
+
+```bash
+cd src/frontend
+npm install
+```
+
+Create a local environment file from the example:
+
+```bash
+cp .env.example .env
+```
+
+PowerShell alternative:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Run the frontend:
+
+```bash
+npm run dev
+```
+
+Vite will print the local URL in the terminal. By default, it is usually:
+
+```text
+http://localhost:5173
+```
+
+## Environment Variables
+
+The frontend uses `.env.example` as the documented local configuration template:
+
+```env
+VITE_API_BASE_URL=/api
+```
+
+`VITE_API_BASE_URL` defines the base URL used by the frontend Axios client. In local development, it should remain `/api` so browser requests go through the Vite proxy.
+
+Do not commit local secrets or production credentials to `.env`.
+
+## Vite Proxy
+
+The frontend and backend run on different local ports during development:
+
+- Frontend: Vite dev server, usually `http://localhost:5173`
+- Backend: ASP.NET Core API, `http://localhost:5174`
+
+The Vite proxy forwards frontend requests that start with `/api` to the backend:
+
+```text
+/api -> http://localhost:5174
+```
+
+This keeps frontend calls simple and avoids CORS issues while developing locally.
+
+## Main Frontend Routes
+
+| Route | Access | Description |
+| --- | --- | --- |
+| `/login` | Public | Login page. Authenticated users are redirected to the dashboard. |
+| `/dashboard` | Protected | Monthly financial overview and category summary. |
+| `/categories` | Protected | Category list and CRUD actions. |
+| `/transactions` | Protected | Transaction list, filters, and CRUD actions. |
+
+The root route `/` redirects to `/dashboard`, and unknown routes render a not found page.
+
+## Screenshots
+
+Screenshots have not been committed yet.
+
+Expected paths:
+
+```text
+docs/screenshots/login.png
+docs/screenshots/dashboard.png
+```
+
+After capturing the screens, add the files above and replace this note with image references:
+
+```md
+![Login screen](docs/screenshots/login.png)
+![Dashboard screen](docs/screenshots/dashboard.png)
+```
 
 ## Project Structure
 
 ```text
 personal-finance-manager/
 ├── docker-compose.yml
+├── README.md
 └── src/
     ├── backend/
     │   ├── docs/
@@ -42,71 +224,46 @@ personal-finance-manager/
     │   ├── PersonalFinance.Application/
     │   ├── PersonalFinance.Domain/
     │   └── PersonalFinance.Infrastructure/
-    └── frontend/                 # Planned
+    └── frontend/
+        ├── public/
+        ├── src/
+        │   ├── api/
+        │   ├── assets/
+        │   ├── components/
+        │   ├── contexts/
+        │   ├── hooks/
+        │   ├── layouts/
+        │   ├── pages/
+        │   ├── routes/
+        │   ├── services/
+        │   ├── types/
+        │   └── utils/
+        ├── .env.example
+        ├── package.json
+        └── vite.config.ts
 ```
 
-The backend follows a layered structure:
+The backend follows a layered architecture:
 
-- `PersonalFinance.Api`: controllers, middleware, JWT configuration, and Swagger.
+- `PersonalFinance.Domain`: entities and domain enums.
 - `PersonalFinance.Application`: service interfaces and request/response contracts.
-- `PersonalFinance.Domain`: entities and enums.
-- `PersonalFinance.Infrastructure`: EF Core, PostgreSQL, and service implementations.
+- `PersonalFinance.Infrastructure`: EF Core, PostgreSQL persistence, and service implementations.
+- `PersonalFinance.Api`: controllers, middleware, authentication configuration, and Swagger.
 
-## Run the Backend Locally
+## Additional Documentation
 
-Prerequisites:
-
-- .NET 10 SDK
-- Docker Desktop or Docker Engine with Compose
-- EF Core CLI (`dotnet-ef`)
-
-1. Start PostgreSQL from the repository root:
-
-```bash
-docker compose up -d postgres
-```
-
-2. Configure `ConnectionStrings:DefaultConnection` and the local `Jwt` settings. Use placeholders or local secret storage; do not commit credentials or signing keys.
-
-3. Apply migrations:
-
-```bash
-cd src/backend
-dotnet ef database update --project PersonalFinance.Infrastructure --startup-project PersonalFinance.Api
-```
-
-4. Run the API:
-
-```bash
-dotnet run --project PersonalFinance.Api
-```
-
-In Development, Swagger is available at:
-
-```text
-https://localhost:7240/swagger
-```
-
-## API Documentation
-
-See [Backend API Documentation](src/backend/docs/backend-api.md) for local configuration, authentication, endpoints, and request/response examples.
-
-## Security Notes
-
-- Protected endpoints require a JWT Bearer token.
-- User IDs are read from validated JWT claims, not accepted from request payloads.
-- Authenticated users can access only their own categories, transactions, and summaries.
-- Real database passwords and JWT signing keys must remain outside source control.
+See [Backend API Documentation](src/backend/docs/backend-api.md) for endpoint details and backend-specific notes.
 
 ## Roadmap
 
-- [x] Backend project architecture
-- [x] PostgreSQL with Docker Compose
-- [x] JWT authentication
-- [x] Category and transaction management
-- [x] Monthly and category summaries
-- [x] Error handling and API documentation
-- [ ] Implement the frontend application
-- [ ] Add automated backend tests
-- [ ] Add dashboard and data visualizations
-- [ ] Prepare deployment and production configuration
+- Charts
+- Recurring transactions
+- Budget goals
+- Export reports
+- Deployment
+- Tests
+- CI/CD
+
+## Author
+
+Luis Marcano
