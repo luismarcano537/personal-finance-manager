@@ -1,8 +1,107 @@
+import type { MouseEvent, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 const primaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl bg-brand-primary px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_rgba(59,170,114,0.24)] transition hover:bg-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
 const secondaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl border border-brand-border-strong bg-brand-surface px-6 py-3 text-sm font-bold text-brand-text-strong shadow-sm transition hover:border-brand-primary hover:bg-brand-primary-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
 const sectionLink = 'text-sm font-semibold text-brand-text-muted transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary'
+const sectionScrollOffset = 32
+
+let activeScrollAnimation: number | null = null
+
+type SectionLinkProps = {
+  children: ReactNode
+  sectionId: string
+}
+
+function easeInOutCubic(progress: number): number {
+  return progress < 0.5
+    ? 4 * progress * progress * progress
+    : 1 - Math.pow(-2 * progress + 2, 3) / 2
+}
+
+function animateToSection(section: HTMLElement, sectionId: string): void {
+  const startPosition = window.scrollY
+  const targetPosition = Math.max(
+    section.getBoundingClientRect().top + startPosition - sectionScrollOffset,
+    0,
+  )
+  const distance = targetPosition - startPosition
+
+  if (activeScrollAnimation !== null) {
+    window.cancelAnimationFrame(activeScrollAnimation)
+  }
+
+  const updateUrl = (): void => {
+    const url = `/#${sectionId}`
+
+    if (window.location.hash === `#${sectionId}`) {
+      window.history.replaceState(null, '', url)
+      return
+    }
+
+    window.history.pushState(null, '', url)
+  }
+
+  if (Math.abs(distance) < 1) {
+    window.scrollTo(0, targetPosition)
+    updateUrl()
+    return
+  }
+
+  const duration = Math.min(1100, Math.max(650, Math.abs(distance) * 0.35))
+  const startTime = performance.now()
+
+  const animate = (currentTime: number): void => {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const easedProgress = easeInOutCubic(progress)
+
+    window.scrollTo(0, startPosition + distance * easedProgress)
+
+    if (progress < 1) {
+      activeScrollAnimation = window.requestAnimationFrame(animate)
+      return
+    }
+
+    activeScrollAnimation = null
+    updateUrl()
+  }
+
+  activeScrollAnimation = window.requestAnimationFrame(animate)
+}
+
+function SectionLink({ children, sectionId }: SectionLinkProps) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>): void => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return
+    }
+
+    const section = document.getElementById(sectionId)
+
+    if (!section) {
+      return
+    }
+
+    event.preventDefault()
+    animateToSection(section, sectionId)
+  }
+
+  return (
+    <Link
+      className={sectionLink}
+      onClick={handleClick}
+      to={`/#${sectionId}`}
+    >
+      {children}
+    </Link>
+  )
+}
 
 function Brand() {
   return (
@@ -91,7 +190,7 @@ function LandingPage() {
       <header className="border-b border-brand-border/80 bg-brand-background/95">
         <nav aria-label="Public navigation" className="mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:px-6 lg:px-8">
           <Link aria-label="Stewardly home" className="shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" to="/"><Brand /></Link>
-          <div className="hidden items-center gap-8 md:flex"><Link className={sectionLink} to="/#why-stewardly">Why Stewardly</Link><Link className={sectionLink} to="/#how-it-works">How it works</Link><Link className={sectionLink} to="/#benefits">Benefits</Link></div>
+          <div className="hidden items-center gap-8 md:flex"><SectionLink sectionId="why-stewardly">Why Stewardly</SectionLink><SectionLink sectionId="how-it-works">How it works</SectionLink><SectionLink sectionId="benefits">Benefits</SectionLink></div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2"><Link className="inline-flex min-h-11 items-center px-2 text-sm font-bold hover:text-brand-primary-dark sm:px-3" to="/login">Sign in</Link><Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-3 text-sm font-bold text-white hover:bg-brand-primary-dark sm:px-4" to="/login">Get started</Link></div>
         </nav>
       </header>
@@ -108,25 +207,25 @@ function LandingPage() {
           <ProductMockups />
         </section>
 
-        <section className="border-y border-brand-border bg-brand-surface px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="why-stewardly">
+        <section className="scroll-mt-8 border-y border-brand-border bg-brand-surface px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="why-stewardly">
           <div className="mx-auto max-w-7xl"><div className="max-w-2xl"><p className="text-sm font-bold uppercase tracking-normal text-brand-gold">A calmer approach</p><h2 className="mt-3 text-3xl font-bold text-brand-text-strong sm:text-4xl">Why Stewardly?</h2><p className="mt-5 text-base leading-8 text-brand-text-muted sm:text-lg">Because managing money should not feel confusing, noisy or stressful.</p></div>
             <div className="mt-10 grid gap-4 md:grid-cols-3">{whyCards.map((card) => <article className="rounded-3xl border border-brand-border bg-brand-surface p-6 shadow-[0_18px_45px_rgba(31,41,51,0.05)] sm:p-7" key={card.title}><p className="text-xs font-bold uppercase tracking-normal text-brand-primary-dark">{card.eyebrow}</p><h3 className="mt-3 text-xl font-bold text-brand-text-strong">{card.title}</h3><p className="mt-3 text-sm leading-7 text-brand-text-muted">{card.text}</p></article>)}</div>
           </div>
         </section>
 
-        <section className="scroll-mt-6 px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="how-it-works">
+        <section className="scroll-mt-8 px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="how-it-works">
           <div className="mx-auto max-w-7xl"><div className="max-w-2xl"><p className="text-sm font-bold uppercase tracking-normal text-brand-primary-dark">How it works</p><h2 className="mt-3 text-3xl font-bold text-brand-text-strong sm:text-4xl">Start organizing in a few simple steps</h2></div>
             <div className="mt-12 grid sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-4">{steps.map((step, index) => <article className="border-t border-brand-border py-6 sm:border-l sm:border-t-0 sm:px-5 sm:py-0" key={step.title}><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-primary-soft text-sm font-bold text-brand-primary-dark">{String(index + 1).padStart(2, '0')}</span><h3 className="mt-5 text-lg font-bold text-brand-text-strong">{step.title}</h3><p className="mt-3 text-sm leading-7 text-brand-text-muted">{step.text}</p></article>)}</div>
           </div>
         </section>
 
-        <section className="bg-brand-primary-soft px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="benefits">
+        <section className="scroll-mt-8 bg-brand-primary-soft px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="benefits">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center"><div className="max-w-2xl"><p className="text-sm font-bold uppercase tracking-normal text-brand-primary-dark">Built for everyday life</p><h2 className="mt-3 text-3xl font-bold text-brand-text-strong sm:text-4xl">Less financial noise. More peace to decide.</h2><p className="mt-6 text-base leading-8 sm:text-lg">Stewardly is designed for people who want to stop guessing, stop depending on messy notes, and start building a calmer relationship with money.</p></div>
             <ul className="grid gap-3 sm:grid-cols-2">{benefits.map((benefit) => <li className="flex min-h-28 items-start gap-3 rounded-2xl border border-brand-primary/20 bg-brand-surface p-5 shadow-sm" key={benefit}><span aria-hidden="true" className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-primary text-xs font-bold text-white">✓</span><span className="font-bold leading-6 text-brand-text-strong">{benefit}</span></li>)}</ul>
           </div>
         </section>
 
-        <section className="border-b border-brand-border bg-brand-surface px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="privacy">
+        <section className="scroll-mt-8 border-b border-brand-border bg-brand-surface px-4 py-20 sm:px-6 lg:px-8 lg:py-24" id="privacy">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.8fr]"><div className="max-w-2xl"><p className="text-sm font-bold uppercase tracking-normal text-brand-gold">Trust and privacy</p><h2 className="mt-3 text-3xl font-bold text-brand-text-strong sm:text-4xl">Built for calm and responsible organization.</h2><p className="mt-6 text-base leading-8 text-brand-text-muted sm:text-lg">Your financial organization should feel private, simple and under your control. Stewardly is being built with clarity, privacy and responsible money management in mind.</p></div>
             <div className="grid gap-4 sm:grid-cols-2"><article className="rounded-3xl border border-brand-border bg-brand-background p-6"><h3 className="text-sm font-bold text-brand-text-strong">Private by principle</h3><p className="mt-3 text-sm leading-6 text-brand-text-muted">Your financial records belong to your personal organization.</p></article><article className="rounded-3xl border border-brand-border bg-brand-background p-6" id="terms"><h3 className="text-sm font-bold text-brand-text-strong">Clear by design</h3><p className="mt-3 text-sm leading-6 text-brand-text-muted">Simple language and focused tools keep you in control.</p></article></div>
           </div>
@@ -135,7 +234,7 @@ function LandingPage() {
         <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24"><div className="mx-auto max-w-5xl rounded-3xl border border-brand-primary/20 bg-brand-text-strong px-6 py-12 text-center shadow-[0_24px_70px_rgba(31,41,51,0.14)] sm:px-10 sm:py-16"><p className="text-sm font-bold uppercase tracking-normal text-brand-gold">A simple first step</p><h2 className="mx-auto mt-3 max-w-2xl text-3xl font-bold text-white sm:text-4xl">Start with what you have today.</h2><p className="mx-auto mt-5 max-w-xl text-base leading-8 text-[#D8DFE3]">You do not need a complicated system to begin. Stewardly helps you take the first step with clarity.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Link className={primaryCta} to="/login">Get started</Link><Link className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/30 px-6 py-3 text-sm font-bold text-white hover:bg-white/10" to="/login">Sign in</Link></div></div></section>
       </main>
 
-      <footer className="border-t border-brand-border bg-brand-surface px-4 py-12 sm:px-6 lg:px-8"><div className="mx-auto max-w-7xl"><div className="flex flex-col gap-10 lg:flex-row lg:justify-between"><div><Link className="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" to="/"><Brand /></Link><p className="mt-4 text-sm font-semibold">Manage the little. Prepare for more.</p></div><nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3"><Link className={sectionLink} to="/#why-stewardly">Why Stewardly</Link><Link className={sectionLink} to="/#how-it-works">How it works</Link><Link className={sectionLink} to="/#benefits">Benefits</Link><Link className={sectionLink} to="/#privacy">Privacy</Link><Link className={sectionLink} to="/#terms">Terms</Link><Link className={sectionLink} to="/login">Sign in</Link></nav></div><p className="mt-10 border-t border-brand-border pt-6 text-xs leading-6 text-brand-text-muted">© 2026 Stewardly. Built to help people manage money with clarity, calm and purpose.</p></div></footer>
+      <footer className="border-t border-brand-border bg-brand-surface px-4 py-12 sm:px-6 lg:px-8"><div className="mx-auto max-w-7xl"><div className="flex flex-col gap-10 lg:flex-row lg:justify-between"><div><Link className="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" to="/"><Brand /></Link><p className="mt-4 text-sm font-semibold">Manage the little. Prepare for more.</p></div><nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3"><SectionLink sectionId="why-stewardly">Why Stewardly</SectionLink><SectionLink sectionId="how-it-works">How it works</SectionLink><SectionLink sectionId="benefits">Benefits</SectionLink><SectionLink sectionId="privacy">Privacy</SectionLink><SectionLink sectionId="terms">Terms</SectionLink><Link className={sectionLink} to="/login">Sign in</Link></nav></div><p className="mt-10 border-t border-brand-border pt-6 text-xs leading-6 text-brand-text-muted">© 2026 Stewardly. Built to help people manage money with clarity, calm and purpose.</p></div></footer>
     </div>
   )
 }
