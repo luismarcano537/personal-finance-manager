@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import ThemeToggle from '../components/ui/ThemeToggle'
 import { useAuth } from '../hooks/useAuth'
 
 type AuthenticatedLayoutProps = {
@@ -126,6 +127,8 @@ function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
                   {currentNavigationItem.label}
                 </h2>
               </div>
+
+              <ThemeToggle showLabel={false} />
 
               <div className="hidden min-w-0 text-right sm:block">
                 <p className="text-sm text-brand-text-muted">Signed in as</p>

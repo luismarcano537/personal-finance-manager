@@ -26,3 +26,51 @@
   --color-brand-error: #DC2626;
   --color-brand-error-soft: #FEF2F2;
 }
+/* Shared application theme. The data attribute is managed by ThemeProvider. */
+:root {
+  --landing-contrast-surface: #1F2933;
+  --landing-device-frame: #1F2933;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --color-brand-primary: #3BAA72;
+  --color-brand-primary-dark: #55BE82;
+  --color-brand-primary-soft: #163526;
+
+  --color-brand-gold: #D9B16F;
+  --color-brand-gold-soft: #392E1F;
+
+  --color-brand-background: #0E1511;
+  --color-brand-surface: #151F19;
+  --color-brand-surface-muted: #1B2821;
+
+  --color-brand-text-strong: #F2F6F3;
+  --color-brand-text: #D0D9D3;
+  --color-brand-text-muted: #9AA89F;
+
+  --color-brand-border: #29372F;
+  --color-brand-border-strong: #3A4A40;
+
+  --color-brand-error: #F87171;
+  --color-brand-error-soft: #3A1D1D;
+
+  --landing-contrast-surface: #111A15;
+  --landing-device-frame: #070B09;
+  color-scheme: dark;
+}
+
+:root[data-theme='dark'] .bg-white {
+  background-color: var(--color-brand-surface);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: var(--color-brand-background);
+}
+
+body {
+  transition: background-color 300ms ease, color 300ms ease;
+}

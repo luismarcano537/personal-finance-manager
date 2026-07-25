@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import ThemeToggle from '../components/ui/ThemeToggle'
 import { getApiErrorMessage } from '../utils/getApiErrorMessage'
 
 const loginErrorMessage =
@@ -36,7 +37,10 @@ function Login() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-brand-background px-4 py-8 text-brand-text sm:px-6 lg:px-8">
+    <main className="relative flex min-h-screen items-center justify-center bg-brand-background px-4 pb-8 pt-20 text-brand-text transition-colors duration-300 sm:px-6 lg:px-8">
+      <div className="absolute right-4 top-4 sm:right-6 lg:right-8">
+        <ThemeToggle />
+      </div>
       <section className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-brand-border bg-white shadow-[0_24px_70px_rgba(31,41,51,0.08)] lg:grid-cols-[0.95fr_1.05fr]">
         <div className="hidden bg-brand-primary-soft p-10 lg:flex lg:flex-col lg:justify-between">
           <div>

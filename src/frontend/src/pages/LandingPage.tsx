@@ -1,12 +1,12 @@
 import { useState, type MouseEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import ThemeToggle from '../components/ui/ThemeToggle'
 
-const primaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl bg-brand-primary px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_rgba(59,170,114,0.24)] transition hover:bg-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
+const primaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl bg-brand-primary px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_rgba(59,170,114,0.24)] transition hover:brightness-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
 const secondaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl border border-brand-border-strong bg-brand-surface px-6 py-3 text-sm font-bold text-brand-text-strong shadow-sm transition hover:border-brand-primary hover:bg-brand-primary-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
 const sectionLink = 'text-sm font-semibold text-brand-text-muted transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary'
 const mobileSectionLink = 'flex min-h-12 items-center rounded-xl px-4 text-sm font-semibold text-brand-text transition hover:bg-brand-primary-soft hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary'
-const sectionScrollOffset = 32
-
+const sectionScrollOffset = 88
 let activeScrollAnimation: number | null = null
 
 type SectionLinkProps = {
@@ -137,7 +137,7 @@ function ProductMockups() {
     <div className="relative mx-auto mt-12 h-[355px] w-full max-w-4xl sm:h-[455px] lg:h-[500px]">
       <div className="absolute inset-x-8 bottom-0 h-20 rounded-[50%] bg-brand-primary-soft/70 blur-2xl" />
       <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-end justify-center">
-        <div aria-label="Categories interface preview" className="h-[255px] w-[142px] translate-x-8 translate-y-7 -rotate-3 rounded-[2rem] border-[5px] border-brand-text-strong bg-brand-surface p-3 shadow-[0_24px_55px_rgba(31,41,51,0.16)] sm:h-[330px] sm:w-[184px] sm:translate-x-4 lg:h-[365px] lg:w-[202px] lg:translate-x-0" role="img">
+        <div aria-label="Categories interface preview" className="h-[255px] w-[142px] translate-x-8 translate-y-7 -rotate-3 rounded-[2rem] border-[5px] border-[var(--landing-device-frame)] bg-brand-surface p-3 shadow-[0_24px_55px_rgba(31,41,51,0.16)] sm:h-[330px] sm:w-[184px] sm:translate-x-4 lg:h-[365px] lg:w-[202px] lg:translate-x-0" role="img">
           <div className="mx-auto h-1.5 w-10 rounded-full bg-brand-border-strong" />
           <p className="mt-5 text-[8px] font-semibold text-brand-text-muted">EXPENSES</p>
           <p className="mt-1 text-sm font-bold text-brand-text-strong">Categories</p>
@@ -151,13 +151,13 @@ function ProductMockups() {
           </div>
         </div>
 
-        <div aria-label="Financial health dashboard interface preview" className="z-10 -mx-10 h-[305px] w-[170px] rounded-[2rem] border-[5px] border-brand-text-strong bg-brand-surface p-3 shadow-[0_24px_55px_rgba(31,41,51,0.2)] sm:-mx-6 sm:h-[400px] sm:w-[224px] lg:-mx-3 lg:h-[450px] lg:w-[252px]" role="img">
+        <div aria-label="Financial health dashboard interface preview" className="z-10 -mx-10 h-[305px] w-[170px] rounded-[2rem] border-[5px] border-[var(--landing-device-frame)] bg-brand-surface p-3 shadow-[0_24px_55px_rgba(31,41,51,0.2)] sm:-mx-6 sm:h-[400px] sm:w-[224px] lg:-mx-3 lg:h-[450px] lg:w-[252px]" role="img">
           <div className="mx-auto h-1.5 w-12 rounded-full bg-brand-border-strong" />
           <div className="mt-4 flex justify-between"><span className="text-[9px] font-bold">Stewardly</span><span className="h-5 w-5 rounded-lg bg-brand-primary-soft" /></div>
           <p className="mt-4 text-[8px] font-semibold text-brand-text-muted">JULY OVERVIEW</p>
           <p className="mt-1 text-base font-bold text-brand-text-strong sm:text-lg">Financial health</p>
           <div className="mt-3 rounded-2xl bg-brand-primary-soft p-3 sm:p-4">
-            <div className="flex items-end justify-between gap-2"><div><p className="text-[8px] font-semibold text-brand-primary-dark">Monthly balance</p><p className="mt-1 text-base font-bold sm:text-lg">$1,280</p></div><span className="rounded-lg bg-white px-2 py-1 text-[8px] font-bold text-brand-primary-dark">+12%</span></div>
+            <div className="flex items-end justify-between gap-2"><div><p className="text-[8px] font-semibold text-brand-primary-dark">Monthly balance</p><p className="mt-1 text-base font-bold sm:text-lg">$1,280</p></div><span className="rounded-lg bg-brand-surface px-2 py-1 text-[8px] font-bold text-brand-primary-dark">+12%</span></div>
             <div className="mt-4 flex h-10 items-end gap-1 sm:h-14">
               {[35, 55, 44, 75, 62, 88, 72].map((height, index) => <span className={index === 5 ? 'flex-1 rounded-t bg-brand-primary' : 'flex-1 rounded-t bg-brand-primary/25'} key={height} style={{ height: `${height}%` }} />)}
             </div>
@@ -168,7 +168,7 @@ function ProductMockups() {
           </div>
         </div>
 
-        <div aria-label="Commitments calendar interface preview" className="h-[255px] w-[142px] -translate-x-8 translate-y-7 rotate-3 rounded-[2rem] border-[5px] border-brand-text-strong bg-brand-surface p-3 shadow-[0_24px_55px_rgba(31,41,51,0.16)] sm:h-[330px] sm:w-[184px] sm:-translate-x-4 lg:h-[365px] lg:w-[202px] lg:translate-x-0" role="img">
+        <div aria-label="Commitments calendar interface preview" className="h-[255px] w-[142px] -translate-x-8 translate-y-7 rotate-3 rounded-[2rem] border-[5px] border-[var(--landing-device-frame)] bg-brand-surface p-3 shadow-[0_24px_55px_rgba(31,41,51,0.16)] sm:h-[330px] sm:w-[184px] sm:-translate-x-4 lg:h-[365px] lg:w-[202px] lg:translate-x-0" role="img">
           <div className="mx-auto h-1.5 w-10 rounded-full bg-brand-border-strong" />
           <p className="mt-5 text-[8px] font-semibold text-brand-text-muted">UPCOMING</p>
           <p className="mt-1 text-sm font-bold text-brand-text-strong">Commitments</p>
@@ -196,8 +196,8 @@ function LandingPage() {
   const benefits = ['Know what you earn.', 'Understand what you spend.', 'Prepare for what is coming.', 'Build better habits step by step.']
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-brand-background text-brand-text">
-      <header className="relative z-20 border-b border-brand-border/80 bg-brand-background/95">
+    <div className="min-h-screen overflow-x-clip bg-brand-background text-brand-text transition-colors duration-300">
+      <header className="sticky top-0 z-40 border-b border-brand-border/80 bg-brand-background/95 shadow-[0_8px_24px_rgba(31,41,51,0.06)] backdrop-blur-md">
         <nav aria-label="Public navigation" className="mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:px-6 lg:px-8">
           <Link aria-label="Stewardly home" className="shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" to="/"><Brand /></Link>
 
@@ -208,12 +208,13 @@ function LandingPage() {
           </div>
 
           <div className="hidden shrink-0 items-center gap-2 md:flex">
+            <ThemeToggle />
             <Link className="inline-flex min-h-11 items-center px-3 text-sm font-bold hover:text-brand-primary-dark" to="/login">Sign in</Link>
-            <Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-4 text-sm font-bold text-white hover:bg-brand-primary-dark" to="/login">Get started</Link>
+            <Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-4 text-sm font-bold text-white hover:brightness-90" to="/login">Get started</Link>
           </div>
 
           <div className="flex shrink-0 items-center gap-2 md:hidden">
-            <Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-3 text-sm font-bold text-white transition hover:bg-brand-primary-dark" to="/login">Get started</Link>
+            <Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-3 text-sm font-bold text-white transition hover:brightness-90" to="/login">Get started</Link>
             <button
               aria-controls="mobile-navigation"
               aria-expanded={isMobileMenuOpen}
@@ -234,6 +235,10 @@ function LandingPage() {
         {isMobileMenuOpen ? (
           <div className="absolute inset-x-0 top-full border-b border-brand-border bg-brand-surface shadow-[0_18px_40px_rgba(31,41,51,0.12)] md:hidden">
             <nav aria-label="Mobile navigation" className="mx-auto max-w-7xl px-4 py-4 sm:px-6" id="mobile-navigation">
+              <div className="mb-3 flex min-h-12 items-center justify-between gap-4 rounded-xl bg-brand-background px-4">
+                <span className="text-sm font-semibold text-brand-text">Appearance</span>
+                <ThemeToggle />
+              </div>
               <div className="flex flex-col gap-1">
                 <SectionLink className={mobileSectionLink} onNavigate={() => setIsMobileMenuOpen(false)} sectionId="why-stewardly">Why Stewardly</SectionLink>
                 <SectionLink className={mobileSectionLink} onNavigate={() => setIsMobileMenuOpen(false)} sectionId="how-it-works">How it works</SectionLink>
@@ -284,7 +289,7 @@ function LandingPage() {
           </div>
         </section>
 
-        <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24"><div className="mx-auto max-w-5xl rounded-3xl border border-brand-primary/20 bg-brand-text-strong px-6 py-12 text-center shadow-[0_24px_70px_rgba(31,41,51,0.14)] sm:px-10 sm:py-16"><p className="text-sm font-bold uppercase tracking-normal text-brand-gold">A simple first step</p><h2 className="mx-auto mt-3 max-w-2xl text-3xl font-bold text-white sm:text-4xl">Start with what you have today.</h2><p className="mx-auto mt-5 max-w-xl text-base leading-8 text-[#D8DFE3]">You do not need a complicated system to begin. Stewardly helps you take the first step with clarity.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Link className={primaryCta} to="/login">Get started</Link><Link className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/30 px-6 py-3 text-sm font-bold text-white hover:bg-white/10" to="/login">Sign in</Link></div></div></section>
+        <section className="px-4 py-20 sm:px-6 lg:px-8 lg:py-24"><div className="mx-auto max-w-5xl rounded-3xl border border-brand-primary/20 bg-[var(--landing-contrast-surface)] px-6 py-12 text-center shadow-[0_24px_70px_rgba(31,41,51,0.14)] sm:px-10 sm:py-16"><p className="text-sm font-bold uppercase tracking-normal text-brand-gold">A simple first step</p><h2 className="mx-auto mt-3 max-w-2xl text-3xl font-bold text-white sm:text-4xl">Start with what you have today.</h2><p className="mx-auto mt-5 max-w-xl text-base leading-8 text-[#D8DFE3]">You do not need a complicated system to begin. Stewardly helps you take the first step with clarity.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Link className={primaryCta} to="/login">Get started</Link><Link className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/30 px-6 py-3 text-sm font-bold text-white hover:bg-white/10" to="/login">Sign in</Link></div></div></section>
       </main>
 
       <footer className="border-t border-brand-border bg-brand-surface px-4 py-12 sm:px-6 lg:px-8"><div className="mx-auto max-w-7xl"><div className="flex flex-col gap-10 lg:flex-row lg:justify-between"><div><Link className="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" to="/"><Brand /></Link><p className="mt-4 text-sm font-semibold">Manage the little. Prepare for more.</p></div><nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3"><SectionLink sectionId="why-stewardly">Why Stewardly</SectionLink><SectionLink sectionId="how-it-works">How it works</SectionLink><SectionLink sectionId="benefits">Benefits</SectionLink><SectionLink sectionId="privacy">Privacy</SectionLink><SectionLink sectionId="terms">Terms</SectionLink><Link className={sectionLink} to="/login">Sign in</Link></nav></div><p className="mt-10 border-t border-brand-border pt-6 text-xs leading-6 text-brand-text-muted">© 2026 Stewardly. Built to help people manage money with clarity, calm and purpose.</p></div></footer>
