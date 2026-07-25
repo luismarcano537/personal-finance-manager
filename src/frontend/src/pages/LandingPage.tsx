@@ -1,15 +1,18 @@
-import type { MouseEvent, ReactNode } from 'react'
+import { useState, type MouseEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 const primaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl bg-brand-primary px-6 py-3 text-sm font-bold text-white shadow-[0_12px_30px_rgba(59,170,114,0.24)] transition hover:bg-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
 const secondaryCta = 'inline-flex min-h-12 items-center justify-center rounded-2xl border border-brand-border-strong bg-brand-surface px-6 py-3 text-sm font-bold text-brand-text-strong shadow-sm transition hover:border-brand-primary hover:bg-brand-primary-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-4'
 const sectionLink = 'text-sm font-semibold text-brand-text-muted transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary'
+const mobileSectionLink = 'flex min-h-12 items-center rounded-xl px-4 text-sm font-semibold text-brand-text transition hover:bg-brand-primary-soft hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary'
 const sectionScrollOffset = 32
 
 let activeScrollAnimation: number | null = null
 
 type SectionLinkProps = {
   children: ReactNode
+  className?: string
+  onNavigate?: () => void
   sectionId: string
 }
 
@@ -70,7 +73,12 @@ function animateToSection(section: HTMLElement, sectionId: string): void {
   activeScrollAnimation = window.requestAnimationFrame(animate)
 }
 
-function SectionLink({ children, sectionId }: SectionLinkProps) {
+function SectionLink({
+  children,
+  className = sectionLink,
+  onNavigate,
+  sectionId,
+}: SectionLinkProps) {
   const handleClick = (event: MouseEvent<HTMLAnchorElement>): void => {
     if (
       event.button !== 0 ||
@@ -89,12 +97,13 @@ function SectionLink({ children, sectionId }: SectionLinkProps) {
     }
 
     event.preventDefault()
+    onNavigate?.()
     animateToSection(section, sectionId)
   }
 
   return (
     <Link
-      className={sectionLink}
+      className={className}
       onClick={handleClick}
       to={`/#${sectionId}`}
     >
@@ -172,6 +181,7 @@ function ProductMockups() {
 }
 
 function LandingPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const whyCards = [
     { eyebrow: 'See clearly', title: 'Clarity over confusion', text: 'See where your money goes without fighting complex spreadsheets.' },
     { eyebrow: 'Think calmly', title: 'Calm by design', text: 'A clean experience built to help you think, not overwhelm you.' },
@@ -187,12 +197,55 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-brand-background text-brand-text">
-      <header className="border-b border-brand-border/80 bg-brand-background/95">
+      <header className="relative z-20 border-b border-brand-border/80 bg-brand-background/95">
         <nav aria-label="Public navigation" className="mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:px-6 lg:px-8">
           <Link aria-label="Stewardly home" className="shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary" to="/"><Brand /></Link>
-          <div className="hidden items-center gap-8 md:flex"><SectionLink sectionId="why-stewardly">Why Stewardly</SectionLink><SectionLink sectionId="how-it-works">How it works</SectionLink><SectionLink sectionId="benefits">Benefits</SectionLink></div>
-          <div className="flex shrink-0 items-center gap-1 sm:gap-2"><Link className="inline-flex min-h-11 items-center px-2 text-sm font-bold hover:text-brand-primary-dark sm:px-3" to="/login">Sign in</Link><Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-3 text-sm font-bold text-white hover:bg-brand-primary-dark sm:px-4" to="/login">Get started</Link></div>
+
+          <div className="hidden items-center gap-8 md:flex">
+            <SectionLink sectionId="why-stewardly">Why Stewardly</SectionLink>
+            <SectionLink sectionId="how-it-works">How it works</SectionLink>
+            <SectionLink sectionId="benefits">Benefits</SectionLink>
+          </div>
+
+          <div className="hidden shrink-0 items-center gap-2 md:flex">
+            <Link className="inline-flex min-h-11 items-center px-3 text-sm font-bold hover:text-brand-primary-dark" to="/login">Sign in</Link>
+            <Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-4 text-sm font-bold text-white hover:bg-brand-primary-dark" to="/login">Get started</Link>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 md:hidden">
+            <Link className="inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-3 text-sm font-bold text-white transition hover:bg-brand-primary-dark" to="/login">Get started</Link>
+            <button
+              aria-controls="mobile-navigation"
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-brand-border-strong bg-brand-surface text-brand-text-strong transition hover:border-brand-primary hover:bg-brand-primary-soft hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+              type="button"
+            >
+              <span aria-hidden="true" className="relative block h-4 w-5">
+                <span className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition duration-200 ${isMobileMenuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+                <span className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition duration-200 ${isMobileMenuOpen ? 'opacity-0' : ''}`} />
+                <span className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition duration-200 ${isMobileMenuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+              </span>
+            </button>
+          </div>
         </nav>
+
+        {isMobileMenuOpen ? (
+          <div className="absolute inset-x-0 top-full border-b border-brand-border bg-brand-surface shadow-[0_18px_40px_rgba(31,41,51,0.12)] md:hidden">
+            <nav aria-label="Mobile navigation" className="mx-auto max-w-7xl px-4 py-4 sm:px-6" id="mobile-navigation">
+              <div className="flex flex-col gap-1">
+                <SectionLink className={mobileSectionLink} onNavigate={() => setIsMobileMenuOpen(false)} sectionId="why-stewardly">Why Stewardly</SectionLink>
+                <SectionLink className={mobileSectionLink} onNavigate={() => setIsMobileMenuOpen(false)} sectionId="how-it-works">How it works</SectionLink>
+                <SectionLink className={mobileSectionLink} onNavigate={() => setIsMobileMenuOpen(false)} sectionId="benefits">Benefits</SectionLink>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3 border-t border-brand-border pt-4">
+                <Link className={secondaryCta} onClick={() => setIsMobileMenuOpen(false)} to="/login">Sign in</Link>
+                <Link className={primaryCta} onClick={() => setIsMobileMenuOpen(false)} to="/login">Get started</Link>
+              </div>
+            </nav>
+          </div>
+        ) : null}
       </header>
 
       <main>
