@@ -514,12 +514,12 @@ body {
 @keyframes auth-mobile-panel-enter {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.99);
+    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -596,6 +596,33 @@ body {
   .register-feedback-overlay,
   .register-feedback-card {
     animation: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .login-header {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brand-border) 72%, transparent);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-brand-surface) 38%, transparent),
+      transparent
+    );
+  }
+
+  :root[data-theme='dark'] .login-card-stage::after {
+    position: absolute;
+    z-index: 0;
+    top: -1rem;
+    left: 50%;
+    width: min(42rem, 108%);
+    height: 82%;
+    border-radius: 3rem;
+    content: '';
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, var(--landing-hero-green), transparent 72%);
+    filter: blur(30px);
+    opacity: 0.52;
+    transform: translateX(-50%);
   }
 }
 /* Light-mode depth for the public sign-in experience. */

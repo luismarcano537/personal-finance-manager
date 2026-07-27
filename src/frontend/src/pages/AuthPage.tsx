@@ -257,34 +257,45 @@ function AuthPage() {
   }
 
   return (
-    <main className="login-page min-h-screen overflow-x-clip text-brand-text transition-colors duration-300">
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-        <header className="login-header flex min-h-20 items-center justify-between gap-3 py-4">
+    <main className="login-page flex min-h-dvh flex-col overflow-x-clip text-brand-text transition-colors duration-300 lg:min-h-screen">
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 lg:min-h-screen lg:px-8">
+        <header className="login-header flex min-h-16 shrink-0 items-center justify-between gap-3 py-3 sm:min-h-20 sm:py-4">
           <Link
             aria-label="Stewardly home"
             className="flex min-w-0 items-center gap-2.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
             to="/"
           >
-            <BrandLogo className="[&_.brand-logo-tagline]:hidden sm:[&_.brand-logo-tagline]:block" compact showTagline />
+            <BrandLogo
+              className="[&_.brand-logo-tagline]:hidden sm:[&_.brand-logo-tagline]:block"
+              compact
+              showTagline
+            />
           </Link>
 
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
             <Link
-              className="inline-flex min-h-10 items-center px-2 text-xs font-semibold text-brand-text-muted transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary sm:px-3 sm:text-sm"
+              aria-label="Back to home"
+              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-semibold text-brand-text-muted transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary sm:px-3 sm:text-sm"
               to="/"
             >
-              Back to home
+              <span aria-hidden="true" className="text-lg sm:hidden">
+                &larr;
+              </span>
+              <span className="sm:hidden">Home</span>
+              <span className="hidden sm:inline">Back to home</span>
             </Link>
             <ThemeToggle showLabel={false} />
           </div>
         </header>
 
-        <div className="login-card-stage relative isolate flex flex-1 items-center justify-center pb-8 pt-2 sm:pb-10 lg:pb-14">
+        <div
+          className={`login-card-stage relative isolate flex justify-center pb-4 pt-3 md:pb-8 md:pt-3 lg:flex-1 lg:items-center lg:pb-14 lg:pt-2 ${isRegister ? 'flex-none items-start' : 'flex-1 items-center'}`}
+        >
           <section
-            className="auth-shell login-shell relative z-[1] grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-brand-border/80 bg-brand-surface lg:min-h-[670px]"
+            className="auth-shell login-shell relative z-[1] mx-auto grid w-full max-w-[420px] overflow-hidden rounded-[1.75rem] border border-brand-border/80 bg-brand-surface sm:rounded-[2rem] md:max-w-xl lg:min-h-[670px] lg:max-w-6xl"
             data-mode={mode}
           >
-            <div className="auth-visual-panel login-visual relative overflow-hidden border-b border-brand-border p-6 sm:p-8 lg:p-12">
+            <div className="auth-visual-panel login-visual relative hidden overflow-hidden border-b border-brand-border p-6 sm:p-8 lg:block lg:p-12">
               <div
                 aria-hidden="true"
                 className="absolute left-0 top-10 h-px w-16 bg-brand-gold/70"
@@ -292,25 +303,25 @@ function AuthPage() {
               <VisualPanel mode={mode} />
             </div>
 
-            <div className="auth-form-panel login-form-panel flex items-center bg-brand-surface px-5 py-8 sm:px-10 sm:py-12 lg:px-12">
+            <div className="auth-form-panel login-form-panel flex items-center bg-brand-surface px-5 py-6 sm:px-6 md:px-10 md:py-12 lg:px-12">
               <div className="auth-form-content mx-auto w-full max-w-md" key={`form-${mode}`}>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary-dark">
                     {isRegister ? 'Create account' : 'Sign in'}
                   </p>
-                  <h2 className="mt-3 text-3xl font-bold text-brand-text-strong">
+                  <h2 className="mt-2 text-2xl font-bold text-brand-text-strong md:mt-3 md:text-3xl">
                     {isRegister
                       ? 'Create your Stewardly account'
                       : 'Welcome back'}
                   </h2>
-                  <p className="mt-3 text-sm leading-6 text-brand-text-muted">
+                  <p className="mt-2 text-sm leading-6 text-brand-text-muted md:mt-3">
                     {isRegister
                       ? 'Start managing your money with clarity, calm and purpose.'
                       : 'Access your Stewardly dashboard and continue organizing your financial life with calm and clarity.'}
                   </p>
                 </div>
 
-                <form className="mt-8 space-y-5" noValidate onSubmit={handleSubmit}>
+                <form className="mt-6 space-y-4 md:mt-8 md:space-y-5" noValidate onSubmit={handleSubmit}>
                   {isRegister ? (
                     <div>
                       <label
@@ -426,7 +437,7 @@ function AuthPage() {
                   </button>
                 </form>
 
-                <p className="mt-6 text-center text-sm text-brand-text-muted">
+                <p className="mt-5 text-center text-sm text-brand-text-muted md:mt-6">
                   {isRegister
                     ? 'Already have an account? '
                     : 'New to Stewardly? '}
@@ -442,13 +453,17 @@ function AuthPage() {
           </section>
         </div>
 
-        <footer className="flex w-full flex-col gap-4 border-t border-brand-border/80 py-6 text-xs text-brand-text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p className="min-w-0 leading-6">
-            © 2026 Stewardly. Manage the little. Prepare for more.
+        <footer className="flex w-full shrink-0 flex-col items-center gap-1.5 border-t border-brand-border/40 py-3 text-center text-[0.6875rem] text-brand-text-muted sm:flex-row sm:justify-between sm:gap-2 sm:py-4 sm:text-left sm:text-xs md:gap-4 lg:border-brand-border/80 lg:py-6">
+          <p className="min-w-0 leading-5 md:leading-6">
+            © 2026 Stewardly.
+            <span className="hidden lg:inline">
+              {' '}
+              Manage the little. Prepare for more.
+            </span>
           </p>
           <nav
             aria-label="Authentication footer navigation"
-            className="flex flex-wrap items-center gap-x-5 gap-y-3"
+            className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 sm:justify-start md:gap-x-5 md:gap-y-3"
           >
             <Link
               className="font-semibold transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
@@ -456,12 +471,18 @@ function AuthPage() {
             >
               Home
             </Link>
+            <span aria-hidden="true" className="text-brand-border-strong md:hidden">
+              &middot;
+            </span>
             <Link
               className="font-semibold transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               to="/#privacy"
             >
               Privacy
             </Link>
+            <span aria-hidden="true" className="text-brand-border-strong md:hidden">
+              &middot;
+            </span>
             <Link
               className="font-semibold transition hover:text-brand-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               to="/#terms"
