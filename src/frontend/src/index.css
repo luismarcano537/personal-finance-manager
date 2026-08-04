@@ -112,6 +112,22 @@ body {
     radial-gradient(ellipse 46% 36% at 100% -6%, var(--landing-hero-gold), transparent 76%);
   background-repeat: no-repeat;
 }
+/*
+  Dashboard hero: premium dark-green surface (protagonist of the screen).
+  Always dark in both themes so white text stays readable; values follow the
+  approved "Multi-screen Proposal v3" green gradient (design doc, Appendix A).
+*/
+.dashboard-hero {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 90% -10%, rgba(207, 159, 87, 0.18), transparent 70%),
+    linear-gradient(135deg, #1d563c 0%, #214c3b 35%, #32583b 100%);
+}
+
+:root[data-theme='dark'] .dashboard-hero {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 90% -10%, rgba(217, 177, 111, 0.16), transparent 70%),
+    linear-gradient(135deg, #071a12 0%, #0c2518 40%, #1f3421 100%);
+}
 /* Landing-specific presentation, scoped through reusable classes. */
 .landing-hero {
   background-color: var(--color-brand-background);
