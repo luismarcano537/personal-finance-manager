@@ -100,6 +100,18 @@ body,
 body {
   transition: background-color 300ms ease, color 300ms ease;
 }
+/*
+  Authenticated App Experience background atmosphere.
+  Light mode gains depth (soft green/gold radials over the base background,
+  no flat white); dark mode stays premium. Reuses existing theme variables.
+*/
+.app-shell-surface {
+  background-color: var(--color-brand-background);
+  background-image:
+    radial-gradient(ellipse 58% 42% at 0% -4%, var(--landing-hero-green), transparent 72%),
+    radial-gradient(ellipse 46% 36% at 100% -6%, var(--landing-hero-gold), transparent 76%);
+  background-repeat: no-repeat;
+}
 /* Landing-specific presentation, scoped through reusable classes. */
 .landing-hero {
   background-color: var(--color-brand-background);
