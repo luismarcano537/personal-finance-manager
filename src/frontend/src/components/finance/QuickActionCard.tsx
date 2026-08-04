@@ -8,6 +8,7 @@ type QuickActionCardProps = {
   icon?: ReactNode
   onClick?: () => void
   tone?: QuickActionTone
+  disabled?: boolean
 }
 
 type QuickActionToneStyle = {
@@ -49,13 +50,18 @@ function QuickActionCard({
   icon,
   onClick,
   tone = 'primary',
+  disabled = false,
 }: QuickActionCardProps) {
   const styles = toneStyles[tone]
+  const stateClassName = disabled
+    ? 'cursor-not-allowed opacity-60'
+    : styles.hover
 
   return (
     <button
-      className={`flex w-full items-center gap-3 rounded-2xl border bg-brand-surface p-4 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${styles.border} ${styles.hover}`}
-      onClick={onClick}
+      className={`flex w-full items-center gap-3 rounded-2xl border bg-brand-surface p-4 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${styles.border} ${stateClassName}`}
+      disabled={disabled}
+      onClick={disabled ? undefined : onClick}
       type="button"
     >
       {icon ? (
